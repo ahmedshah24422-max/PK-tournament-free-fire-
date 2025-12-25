@@ -35,8 +35,6 @@
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .btn-press:active { transform: scale(0.95); transition: transform 0.1s; }
-        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        .dark .glass { background: rgba(30, 41, 59, 0.95); }
         
         .nav-item.active { color: #4f46e5; transform: translateY(-4px); }
         .nav-item { color: #94a3b8; transition: all 0.3s ease; }
@@ -79,7 +77,7 @@
                 <div class="w-24 h-24 bg-gradient-to-tr from-primary to-secondary rounded-full mx-auto flex items-center justify-center text-5xl text-white mb-4 shadow-xl">
                     <i class="fa-solid fa-user-astronaut"></i>
                 </div>
-                <h2 class="text-3xl font-bold dark:text-white">Welcome</h2>
+                <h2 class="text-3xl font-bold dark:text-white">Welcome Back</h2>
                 <p class="text-gray-500 text-sm mt-1">Play & Earn Real Money</p>
             </div>
             
@@ -97,7 +95,7 @@
 
         <!-- BANNED SCREEN -->
         <div id="banned-screen" class="hidden fixed inset-0 z-[100] bg-red-600 flex flex-col items-center justify-center p-6 text-white text-center">
-            <div class="bg-white text-red-600 w-24 h-24 rounded-full flex items-center justify-center text-5xl mb-6 shadow-lg"><i class="fa-solid fa-ban"></i></div>
+            <div class="bg-white text-red-600 w-24 h-24 rounded-full flex items-center justify-center text-5xl mb-6 shadow-lg animate-bounce"><i class="fa-solid fa-ban"></i></div>
             <h1 class="text-3xl font-black mb-2">BANNED</h1>
             <p id="ban-reason-text" class="text-lg font-bold bg-black/20 px-4 py-2 rounded-lg">Violation</p>
             <button onclick="logout()" class="mt-8 bg-white text-red-600 px-8 py-3 rounded-full font-bold shadow-xl btn-press">Log Out</button>
@@ -181,39 +179,30 @@
         <!-- MODALS -->
         <!-- Add Money -->
         <div id="payment-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end sm:items-center justify-center p-4 backdrop-blur-sm"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-3xl p-6 animate-pop shadow-2xl"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold dark:text-white">Add Money</h3><button onclick="closeModal('payment-modal')" class="bg-gray-100 dark:bg-slate-700 w-8 h-8 rounded-full flex items-center justify-center font-bold">✕</button></div><div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-4 rounded-xl mb-4 text-center"><p class="text-xs font-bold text-green-600 uppercase">Easypaisa</p><p class="text-2xl font-black text-gray-800 dark:text-white mt-1 select-all">0318 1068861</p></div><div class="space-y-3"><input type="number" id="pay-amount" class="w-full p-3 bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-600 outline-none" placeholder="Amount Sent"><input type="tel" id="pay-sender-num" class="w-full p-3 bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-600 outline-none" placeholder="Sender Account Number"><div class="relative"><p class="text-xs text-gray-500 mb-1 ml-1">Screenshot Proof</p><input type="file" id="pay-proof" accept="image/*" class="w-full p-2 bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-200 text-sm"></div></div><button id="btn-submit-pay" onclick="submitDeposit()" class="w-full bg-green-600 text-white font-bold py-3.5 rounded-xl shadow-lg mt-6 btn-press">Submit Request</button></div></div>
+        
         <!-- Withdraw -->
         <div id="withdraw-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end sm:items-center justify-center p-4 backdrop-blur-sm"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-3xl p-6 animate-pop shadow-2xl"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold dark:text-white">Withdraw</h3><button onclick="closeModal('withdraw-modal')" class="bg-gray-100 w-8 h-8 rounded-full">✕</button></div><div class="space-y-3"><input type="number" id="w-amount" class="w-full p-3 bg-gray-50 rounded-xl border outline-none" placeholder="Amount"><input type="tel" id="w-number" class="w-full p-3 bg-gray-50 rounded-xl border outline-none" placeholder="Account Number"><select id="w-method" class="w-full p-3 bg-gray-50 rounded-xl border outline-none"><option>Easypaisa</option></select></div><button onclick="submitWithdraw()" class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl shadow-lg mt-6 btn-press">Request Withdraw</button></div></div>
-
-        <!-- DYNAMIC JOIN MODAL -->
-        <div id="join-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end sm:items-center justify-center p-4 backdrop-blur-sm">
-            <div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-[30px] p-6 animate-pop shadow-2xl">
-                <h3 class="text-xl font-bold mb-1 dark:text-white">Join Match</h3>
-                <p id="join-match-mode" class="text-xs text-primary font-bold uppercase mb-4 tracking-wide">SOLO</p>
-                <div id="join-inputs" class="space-y-4 max-h-[50vh] overflow-y-auto no-scrollbar pr-1"></div>
-                <div class="flex gap-3 mt-4">
-                    <button onclick="closeModal('join-modal')" class="flex-1 py-3.5 bg-gray-100 dark:bg-slate-700 dark:text-white rounded-2xl font-bold btn-press">Cancel</button>
-                    <button onclick="confirmJoin()" class="flex-1 py-3.5 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg btn-press">Confirm</button>
-                </div>
-            </div>
-        </div>
         
+        <!-- Dynamic Join Modal -->
+        <div id="join-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end sm:items-center justify-center p-4 backdrop-blur-sm"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-[30px] p-6 animate-pop shadow-2xl"><h3 class="text-xl font-bold mb-1 dark:text-white">Join Match</h3><p id="join-match-mode" class="text-xs text-primary font-bold uppercase mb-4 tracking-wide">SOLO</p><div id="join-inputs" class="space-y-4 max-h-[50vh] overflow-y-auto no-scrollbar pr-1"></div><div class="flex gap-3 mt-4"><button onclick="closeModal('join-modal')" class="flex-1 py-3.5 bg-gray-100 dark:bg-slate-700 dark:text-white rounded-2xl font-bold btn-press">Cancel</button><button onclick="confirmJoin()" class="flex-1 py-3.5 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg btn-press">Confirm</button></div></div></div>
+        
+        <!-- Dynamic Giveaway Join Modal -->
+        <div id="giveaway-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end sm:items-center justify-center p-4 backdrop-blur-sm animate-pop"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-[30px] p-6 shadow-2xl"><h3 class="text-lg font-bold mb-1 dark:text-white">Join Giveaway</h3><p id="giveaway-match-mode" class="text-xs text-secondary font-bold uppercase mb-4 tracking-wide">FREE</p><div id="giveaway-inputs" class="space-y-4 max-h-[50vh] overflow-y-auto no-scrollbar pr-1"></div><div class="flex gap-3 mt-4"><button onclick="closeModal('giveaway-modal')" class="flex-1 py-3.5 bg-gray-100 dark:bg-slate-700 dark:text-white rounded-2xl font-bold btn-press">Cancel</button><button onclick="confirmGiveawayJoin()" class="flex-1 py-3.5 bg-purple-600 text-white rounded-2xl font-bold shadow-lg btn-press">Join Free</button></div></div></div>
+
         <!-- Other Modals -->
         <div id="hacker-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-[30px] p-6 animate-pop shadow-2xl"><div class="flex justify-between items-center mb-4"><h3 class="text-lg font-bold text-red-600">Report Hacker</h3><button onclick="closeModal('hacker-modal')" class="text-gray-400">✕</button></div><input type="text" id="h-uid" class="w-full p-3 bg-gray-50 rounded-xl mb-3" placeholder="Hacker UID"><input type="tel" id="h-mobile" class="w-full p-3 bg-gray-50 rounded-xl mb-3" placeholder="Your Mobile Number"><input type="file" id="h-video" class="w-full p-2 bg-gray-50 rounded-xl mb-4"><button id="btn-report" onclick="submitHackerReport()" class="w-full bg-red-600 text-white font-bold py-3 rounded-xl shadow btn-press">Submit Report</button></div></div>
-        <div id="help-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-[30px] p-6 animate-pop shadow-2xl"><div class="flex justify-between items-center mb-4"><h3 class="text-lg font-bold text-blue-600">Help & Support</h3><button onclick="closeModal('help-modal')" class="text-gray-400">✕</button></div><select id="help-reason" class="w-full p-3 bg-gray-50 rounded-xl mb-3"><option>Feedback</option><option>App Glitch</option><option>Money Not Received</option><option>Account Logged Out / Login Help</option></select><input id="help-username" class="w-full p-3 bg-gray-50 rounded-xl mb-2" placeholder="User Name"><input id="help-mobile" class="w-full p-3 bg-gray-50 rounded-xl mb-2" placeholder="Mobile Number"><input id="help-token" class="w-full p-3 bg-gray-50 rounded-xl mb-3" placeholder="Enter Token / Amount (Optional)"><textarea id="help-message" class="w-full p-3 bg-gray-50 rounded-xl mb-4 h-24" placeholder="Describe issue..."></textarea><button onclick="submitHelp()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow btn-press">Submit</button></div></div>
+        <div id="help-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-[30px] p-6 animate-pop shadow-2xl"><div class="flex justify-between items-center mb-4"><h3 class="text-lg font-bold text-blue-600">Help & Support</h3><button onclick="closeModal('help-modal')" class="text-gray-400">✕</button></div><select id="help-reason" class="w-full p-3 bg-gray-50 rounded-xl mb-3"><option>Feedback</option><option>App Glitch</option><option>Money Not Received</option><option>Account Logged Out / Login Help</option></select><input id="help-username" class="w-full p-3 bg-gray-50 rounded-xl mb-2" placeholder="User Name"><input id="help-mobile" class="w-full p-3 bg-gray-50 rounded-xl mb-2" placeholder="Mobile Number"><input id="help-token" class="w-full p-3 bg-gray-50 rounded-xl mb-3" placeholder="Enter Token / Amount (Optional)"><textarea id="help-message" class="w-full p-3 bg-gray-50 rounded-xl mb-4 h-24" placeholder="Describe issue..."></textarea><button onclick="submitHelp()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow btn-press">Submit Request</button></div></div>
         <div id="room-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm animate-pop"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-[30px] p-6 text-center shadow-2xl"><h3 class="text-xl font-bold mb-4 text-green-600">Room Info</h3><div class="bg-gray-100 p-4 rounded-xl mb-4 border-2 border-dashed border-gray-300"><p class="text-xs text-gray-400 font-bold uppercase">Room ID</p><p id="d-room-id" class="text-3xl font-black select-all tracking-widest dark:text-black">--</p><hr class="my-3 border-gray-300"><p class="text-xs text-gray-400 font-bold uppercase">Password</p><p id="d-room-pass" class="text-3xl font-black select-all tracking-widest dark:text-black">--</p></div><button onclick="closeModal('room-modal')" class="w-full py-3.5 bg-gray-900 text-white rounded-2xl font-bold btn-press">Close</button></div></div>
-        <div id="giveaway-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm animate-pop"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-[30px] p-6 shadow-2xl"><h3 class="text-lg font-bold mb-2 dark:text-white">Join Giveaway</h3><input id="g-join-name" class="w-full p-3 bg-gray-50 rounded-xl mb-2" placeholder="Name"><input id="g-join-uid" class="w-full p-3 bg-gray-50 rounded-xl mb-2" placeholder="UID"><input id="g-join-mobile" class="w-full p-3 bg-gray-50 rounded-xl mb-4" placeholder="Mobile"><div class="flex gap-2"><button onclick="closeModal('giveaway-modal')" class="flex-1 py-3 bg-gray-200 rounded-xl font-bold btn-press">Cancel</button><button onclick="confirmGiveawayJoin()" class="flex-1 py-3 bg-purple-600 text-white rounded-xl font-bold shadow-lg btn-press">Join</button></div></div></div>
-
     </div>
 
     <!-- JAVASCRIPT -->
     <script>
         const firebaseConfig = { apiKey: "AIzaSyAvaUTUkNN9o4P1EZS_xvTd6roP4rA3HBE", authDomain: "tournaments-77bf7.firebaseapp.com", databaseURL: "https://tournaments-77bf7-default-rtdb.firebaseio.com", projectId: "tournaments-77bf7", storageBucket: "tournaments-77bf7.firebasestorage.app", messagingSenderId: "739367246432", appId: "1:739367246432:web:f10ace2277b88a57970105" };
         firebase.initializeApp(firebaseConfig); const db = firebase.database(); const storage = firebase.storage();
-        const auth = firebase.auth();
-        auth.signInAnonymously().catch(e => { console.error("Auth Error:", e); });
+        const auth = firebase.auth(); auth.signInAnonymously().catch(e => { console.error("Auth Error:", e); });
 
         let user = { uid: null, name: null, mobile: null, balance: 0 };
-        let selectedMatchId = null; let selectedMatchMode = null; let selectedGiveawayId = null; let filterType = 'All'; let filterMode = 'All';
+        let selectedMatchId = null; let selectedMatchMode = null; let selectedGiveawayId = null; let selectedGiveawayMode = null; let filterType = 'All'; let filterMode = 'All';
 
         if(localStorage.getItem('arena_uid')) initApp();
 
@@ -249,150 +238,57 @@
             const name = document.getElementById('login-name').value.trim();
             const phone = document.getElementById('login-phone').value.trim();
             const pass = document.getElementById('login-pass').value.trim();
-
             if (!name || !phone || !pass) return alert("Fill all fields");
             if (phone.length !== 11 || !phone.startsWith("03")) return alert("Invalid Mobile (03xxxxxxxxx)");
-
             const uid = phone.replace(/\D/g, '');
-            const btn = document.getElementById('btn-login');
-            btn.disabled = true; btn.innerText = "Checking...";
-
+            const btn = document.getElementById('btn-login'); btn.disabled = true; btn.innerText = "Checking...";
             db.ref('users/' + uid).once('value', snapshot => {
                 if (snapshot.exists()) {
-                    const data = snapshot.val();
-                    if(data.password === pass) {
-                        localStorage.setItem('arena_uid', uid);
-                        location.reload();
-                    } else {
-                        alert("❌ Incorrect Password!");
-                        btn.disabled = false; btn.innerText = "Login / Register";
-                    }
+                    if(snapshot.val().password === pass) { localStorage.setItem('arena_uid', uid); location.reload(); }
+                    else { alert("❌ Incorrect Password!"); btn.disabled = false; btn.innerText = "Login / Register"; }
                 } else {
                     db.ref('users').orderByChild('name').equalTo(name).once('value', nameSnap => {
                         let taken = false; if(nameSnap.exists()) nameSnap.forEach(child => { if(child.key !== uid) taken = true; });
-                        if(taken) {
-                            alert("Name taken! Choose another.");
-                            btn.disabled = false; btn.innerText = "Login / Register";
-                        } else {
-                            db.ref('users/' + uid).update({ name, mobile: phone, password: pass, balance: 0, lastLogin: firebase.database.ServerValue.TIMESTAMP })
-                            .then(() => { localStorage.setItem('arena_uid', uid); location.reload(); });
-                        }
+                        if(taken) { alert("Name taken! Choose another."); btn.disabled = false; btn.innerText = "Login / Register"; }
+                        else { db.ref('users/' + uid).update({ name, mobile: phone, password: pass, balance: 0, lastLogin: firebase.database.ServerValue.TIMESTAMP }).then(() => { localStorage.setItem('arena_uid', uid); location.reload(); }); }
                     });
                 }
             });
         }
-
-        function showApp() {
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('app-screens').classList.remove('hidden');
-            document.getElementById('bottom-nav').classList.remove('hidden');
-            document.getElementById('profile-name').innerText = user.name;
-            document.getElementById('profile-phone').innerText = user.mobile;
-            document.getElementById('wallet-balance').innerText = user.balance || 0;
-            document.getElementById('header-balance').innerText = "₹" + (user.balance || 0);
-            document.getElementById('header-balance').classList.remove('hidden');
-            loadMatches(); loadGiveaways();
-        }
-
-        function switchScreen(screen) {
-            ['home', 'wallet', 'profile'].forEach(s => {
-                document.getElementById('screen-' + s).classList.add('hidden');
-                document.getElementById('nav-' + s).classList.remove('active');
-            });
-            document.getElementById('screen-' + screen).classList.remove('hidden');
-            document.getElementById('nav-' + screen).classList.add('active');
-            if(screen === 'wallet') loadHistory();
-        }
-
-        function switchHomeTab(tab) {
-            document.getElementById('view-matches').classList.add('hidden');
-            document.getElementById('view-giveaways').classList.add('hidden');
-            document.getElementById('htab-matches').className = "flex-1 py-2 rounded-lg text-sm font-bold text-gray-500 hover:text-gray-700 transition-all";
-            document.getElementById('htab-giveaways').className = "flex-1 py-2 rounded-lg text-sm font-bold text-gray-500 hover:text-gray-700 transition-all";
-            document.getElementById('view-' + tab).classList.remove('hidden');
-            if (tab === 'matches') {
-                document.getElementById('htab-matches').className = "flex-1 py-2 rounded-lg text-sm font-bold bg-white dark:bg-slate-600 shadow-sm text-primary transition-all";
-                document.getElementById('matches-filters').style.display = 'block';
-            } else {
-                document.getElementById('htab-giveaways').className = "flex-1 py-2 rounded-lg text-sm font-bold bg-white dark:bg-slate-600 shadow-sm text-primary transition-all";
-                document.getElementById('matches-filters').style.display = 'none';
-            }
-        }
-
+        function showApp() { document.getElementById('auth-screen').classList.add('hidden'); document.getElementById('app-screens').classList.remove('hidden'); document.getElementById('bottom-nav').classList.remove('hidden'); document.getElementById('profile-name').innerText = user.name; document.getElementById('profile-phone').innerText = user.mobile; document.getElementById('wallet-balance').innerText = user.balance || 0; document.getElementById('header-balance').innerText = "₹" + (user.balance || 0); document.getElementById('header-balance').classList.remove('hidden'); loadMatches(); loadGiveaways(); }
+        function switchScreen(s){ ['home','wallet','profile'].forEach(i=>{document.getElementById('screen-'+i).classList.add('hidden');document.getElementById('nav-'+i).classList.remove('active');}); document.getElementById('screen-'+s).classList.remove('hidden'); document.getElementById('nav-'+s).classList.add('active'); if(s==='wallet')loadHistory(); }
+        function switchHomeTab(t){ document.getElementById('view-matches').classList.add('hidden'); document.getElementById('view-giveaways').classList.add('hidden'); document.getElementById('htab-matches').className="flex-1 py-2 rounded-lg text-sm font-bold text-gray-500 hover:text-gray-700 transition-all"; document.getElementById('htab-giveaways').className="flex-1 py-2 rounded-lg text-sm font-bold text-gray-500 hover:text-gray-700 transition-all"; document.getElementById('view-'+t).classList.remove('hidden'); if (t === 'matches') { document.getElementById('htab-matches').className="flex-1 py-2 rounded-lg text-sm font-bold bg-white dark:bg-slate-600 shadow-sm text-primary transition-all"; document.getElementById('matches-filters').style.display = 'block'; } else { document.getElementById('htab-giveaways').className="flex-1 py-2 rounded-lg text-sm font-bold bg-white dark:bg-slate-600 shadow-sm text-primary transition-all"; document.getElementById('matches-filters').style.display = 'none'; } }
         function setFilterType(t){filterType=t;updateFilters();loadMatches();loadGiveaways();} function setFilterMode(m){filterMode=m;updateFilters();loadMatches();loadGiveaways();} 
         function updateFilters(){ ['All','CS','BR'].forEach(t=>document.getElementById('btn-type-'+t).className=t===filterType?"text-primary border-b-2 border-primary font-bold text-sm pb-1 transition":"text-gray-400 font-bold text-sm pb-1 hover:text-primary transition"); ['All','Squad','Duo','Solo'].forEach(m=>document.getElementById('btn-mode-'+m).className=m===filterMode?"px-4 py-1.5 rounded-full text-xs font-bold bg-primary text-white shadow-md btn-press transition":"px-4 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-slate-700 text-gray-500 shadow-sm btn-press transition"); }
 
+        // --- MATCHES ---
         function loadMatches(){ db.ref('tournaments').on('value', s=>{ const d=s.val(); const l=document.getElementById('tournament-list'); l.innerHTML=''; if(d)Object.keys(d).reverse().forEach(k=>{ const t=d[k];
-            let typeM=(filterType==='All')||(t.gameMode.includes(filterType));
-            let modeM=(filterMode==='All')||(t.gameMode.includes(filterMode.toUpperCase()));
-            if(!typeM||!modeM)return;
-            const joined=t.participants&&t.participants[user.uid]; 
-            const count=t.participants?Object.keys(t.participants).length:0;
-            const percent=Math.min(100,(count/t.maxSlots)*100);
-            
-            let btn='';
-            if(joined) btn=`<button onclick="showRoom('${k}')" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-md btn-press transition">View Room Details</button>`;
-            else if(!t.isJoinable) btn=`<button disabled class="w-full bg-gray-400 text-white py-3 rounded-xl font-bold cursor-not-allowed">Match Closed</button>`;
-            else if(count>=t.maxSlots) btn=`<button disabled class="w-full bg-red-400 text-white py-3 rounded-xl font-bold cursor-not-allowed">Match Full</button>`;
-            else btn=`<button onclick="openJoinModal('${k}',${t.fee}, '${t.gameMode}')" class="w-full bg-primary hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-lg btn-press">Join Match</button>`;
-
-            l.innerHTML+=`
-            <div class="bg-white dark:bg-darkCard p-4 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 relative overflow-hidden animate-card group hover:scale-[1.02] transition-transform">
-                <div class="flex justify-between items-start mb-3">
-                    <div>
-                        <span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-[10px] font-bold rounded-lg uppercase tracking-wide">${t.gameMode}</span>
-                        <h3 class="font-black text-xl text-gray-800 dark:text-white mt-2 leading-tight">${t.title}</h3>
-                        <p class="text-xs text-gray-500 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>${new Date(t.date).toLocaleString()}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[10px] text-gray-400 uppercase font-bold">Entry</p>
-                        <p class="text-2xl font-black text-indigo-600 dark:text-indigo-400">₹${t.fee}</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-3 gap-2 mb-4">
-                    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 p-2 rounded-xl text-center"><p class="text-[10px] text-yellow-600 font-bold uppercase">1st Prize</p><p class="font-bold text-gray-800 dark:text-white">₹${t.p1}</p></div>
-                    <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 p-2 rounded-xl text-center"><p class="text-[10px] text-gray-500 font-bold uppercase">2nd</p><p class="font-bold text-gray-800 dark:text-white">₹${t.p2}</p></div>
-                    <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 p-2 rounded-xl text-center"><p class="text-[10px] text-orange-600 font-bold uppercase">3rd</p><p class="font-bold text-gray-800 dark:text-white">₹${t.p3}</p></div>
-                </div>
-                <div class="mb-4">
-                    <div class="flex justify-between text-xs mb-1"><span class="font-bold text-gray-400">Joined: ${count}/${t.maxSlots}</span><span class="font-bold text-green-500">${Math.round(percent)}% Full</span></div>
-                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all duration-1000" style="width:${percent}%"></div></div>
-                </div>
-                ${btn}
-            </div>`}); }); }
+            let typeM=(filterType==='All')||(t.gameMode.includes(filterType)); let modeM=(filterMode==='All')||(t.gameMode.includes(filterMode.toUpperCase())); if(!typeM||!modeM)return;
+            const joined=t.participants&&t.participants[user.uid]; const count=t.participants?Object.keys(t.participants).length:0; const percent=Math.min(100,(count/t.maxSlots)*100);
+            let btn=''; if(joined) btn=`<button onclick="showRoom('${k}')" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-md btn-press transition">View Room Details</button>`; else if(!t.isJoinable) btn=`<button disabled class="w-full bg-gray-400 text-white py-3 rounded-xl font-bold cursor-not-allowed">Match Closed</button>`; else if(count>=t.maxSlots) btn=`<button disabled class="w-full bg-red-400 text-white py-3 rounded-xl font-bold cursor-not-allowed">Match Full</button>`; else btn=`<button onclick="openJoinModal('${k}',${t.fee}, '${t.gameMode}')" class="w-full bg-primary hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-lg btn-press transition">Join Match</button>`;
+            l.innerHTML+=`<div class="bg-white dark:bg-cardDark p-4 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 relative overflow-hidden animate-card group hover:scale-[1.02] transition-transform"><div class="flex justify-between items-start mb-3"><div><span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-[10px] font-bold rounded-lg uppercase tracking-wide">${t.gameMode}</span><h3 class="font-black text-xl text-gray-800 dark:text-white mt-2 leading-tight">${t.title}</h3><p class="text-xs text-gray-500 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>${new Date(t.date).toLocaleString()}</p></div><div class="text-right"><p class="text-[10px] text-gray-400 uppercase font-bold">Entry</p><p class="text-2xl font-black text-indigo-600 dark:text-indigo-400">₹${t.fee}</p></div></div><div class="grid grid-cols-3 gap-2 mb-4"><div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 p-2 rounded-xl text-center"><p class="text-[10px] text-yellow-600 font-bold uppercase">1st Prize</p><p class="font-bold text-gray-800 dark:text-white">₹${t.p1}</p></div><div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 p-2 rounded-xl text-center"><p class="text-[10px] text-gray-500 font-bold uppercase">2nd</p><p class="font-bold text-gray-800 dark:text-white">₹${t.p2}</p></div><div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 p-2 rounded-xl text-center"><p class="text-[10px] text-orange-600 font-bold uppercase">3rd</p><p class="font-bold text-gray-800 dark:text-white">₹${t.p3}</p></div></div><div class="mb-4"><div class="flex justify-between text-xs mb-1"><span class="font-bold text-gray-400">Joined: ${count}/${t.maxSlots}</span><span class="font-bold text-green-500">${Math.round(percent)}% Full</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all duration-1000" style="width:${percent}%"></div></div></div>${btn}</div>`;
+        }); }); }
         
-        // --- NEW: GIVEAWAY DISPLAY LOGIC (SOLO vs SQUAD/DUO) ---
+        // --- GIVEAWAYS (UPDATED WITH SQUAD LOGIC & JOIN COUNT) ---
         function loadGiveaways(){
             db.ref('giveaways').on('value', s=>{ const d=s.val(); const l=document.getElementById('giveaway-list'); l.innerHTML=''; 
             if(d)Object.keys(d).reverse().forEach(k=>{ 
                 const g=d[k];
-                // Filter
                 let typeM=(filterType==='All')||(g.gameMode && g.gameMode.includes(filterType));
                 let modeM=(filterMode==='All')||(g.gameMode && g.gameMode.includes(filterMode.toUpperCase()));
-                if(!typeM || !modeM) return; // Note: You might want to adjust filterMode logic if giveaways don't strictly follow modes
+                if(!typeM || !modeM) return;
                 
                 const joined=g.participants&&g.participants[user.uid];
-                let btn=joined?`<button disabled class="w-full bg-green-100 text-green-700 font-bold py-3 rounded-xl border border-green-200">✅ Already Joined</button>`:(!g.isJoinable?`<button disabled class="w-full bg-gray-400 text-white font-bold py-3 rounded-xl">Closed</button>`:`<button onclick="openGiveawayJoinModal('${k}')" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg btn-press">Join For Free</button>`);
+                const count=g.participants?Object.keys(g.participants).length:0;
+                const percent=Math.min(100,(count/g.maxSlots)*100);
+
+                let btn=joined?`<button disabled class="w-full bg-green-100 text-green-700 font-bold py-3 rounded-xl border border-green-200">✅ Already Joined</button>`:(!g.isJoinable?`<button disabled class="w-full bg-gray-400 text-white font-bold py-3 rounded-xl">Closed</button>`:`<button onclick="openGiveawayJoinModal('${k}', '${g.gameMode || 'SOLO'}')" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg btn-press">Join For Free</button>`);
                 
-                // PRIZE LOGIC
                 let prizeHtml = '';
                 if(g.gameMode && g.gameMode.toUpperCase().includes('SOLO')) {
-                    // Show all 3 prizes for SOLO
-                    prizeHtml = `
-                    <div class="grid grid-cols-3 gap-2 text-center text-xs mb-5">
-                        <div class="bg-purple-50 dark:bg-slate-800 p-2 rounded-xl">🥇 <br><b>${g.p1}</b></div>
-                        <div class="bg-purple-50 dark:bg-slate-800 p-2 rounded-xl">🥈 <br><b>${g.p2}</b></div>
-                        <div class="bg-purple-50 dark:bg-slate-800 p-2 rounded-xl">🥉 <br><b>${g.p3}</b></div>
-                    </div>`;
+                    prizeHtml = `<div class="grid grid-cols-3 gap-2 text-center text-xs mb-5"><div class="bg-purple-50 dark:bg-slate-800 p-2 rounded-xl">🥇 <br><b>${g.p1}</b></div><div class="bg-purple-50 dark:bg-slate-800 p-2 rounded-xl">🥈 <br><b>${g.p2}</b></div><div class="bg-purple-50 dark:bg-slate-800 p-2 rounded-xl">🥉 <br><b>${g.p3}</b></div></div>`;
                 } else {
-                    // Show only 1st (WIN) for DUO/SQUAD
-                    prizeHtml = `
-                    <div class="mb-5 text-center">
-                        <div class="bg-gradient-to-r from-yellow-400 to-orange-500 p-3 rounded-xl shadow-lg text-white">
-                            <p class="text-[10px] font-bold uppercase tracking-widest mb-1 opacity-80">WINNER TAKES ALL</p>
-                            <p class="text-3xl font-black">💎 ${g.p1}</p>
-                        </div>
-                    </div>`;
+                    prizeHtml = `<div class="mb-5 text-center"><div class="bg-gradient-to-r from-yellow-400 to-orange-500 p-3 rounded-xl shadow-lg text-white"><p class="text-[10px] font-bold uppercase tracking-widest mb-1 opacity-80">WINNER TAKES ALL</p><p class="text-3xl font-black">💎 ${g.p1}</p></div></div>`;
                 }
 
                 l.innerHTML+=`
@@ -404,141 +300,68 @@
                         </div>
                         <span class="text-[10px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-bold">FREE</span>
                     </div>
-                    <p class="text-xs text-gray-500 font-medium mb-5"><i class="fa-regular fa-calendar mr-1"></i>Draw: ${new Date(g.date).toLocaleString()}</p>
-                    ${prizeHtml}
-                    ${btn}
+                    <p class="text-xs text-gray-500 font-medium mb-3">Draw: ${new Date(g.date).toLocaleString()}</p>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between text-xs mb-1.5"><span class="font-bold text-gray-400">Joined: ${count}/${g.maxSlots}</span><span class="font-bold text-purple-600">${Math.round(percent)}%</span></div>
+                        <div class="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full" style="width:${percent}%"></div></div>
+                    </div>
+
+                    ${prizeHtml}${btn}
                 </div>`;
             }); });
         }
 
-        // --- DYNAMIC JOIN MODAL LOGIC (SOLO/DUO/SQUAD) ---
+        // --- DYNAMIC JOIN LOGIC (BOTH MATCHES & GIVEAWAYS) ---
+        function generateInputs(container, mode) {
+            let html = `<div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-gray-600"><p class="text-xs font-bold text-indigo-500 mb-2 uppercase">Player 1 (Leader)</p><input id="p1-name" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm mb-2" placeholder="In-Game Name" value="${user.name}"><input id="p1-uid" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm mb-2" placeholder="Game UID"><input id="p1-mobile" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm" placeholder="Mobile" value="${user.mobile}" readonly></div>`;
+            if(mode.includes('DUO') || mode.includes('SQUAD')) { html += `<div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-gray-600"><p class="text-xs font-bold text-gray-500 mb-2 uppercase">Player 2</p><input id="p2-name" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm mb-2" placeholder="Teammate Name"><input id="p2-uid" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm" placeholder="Teammate UID"></div>`; }
+            if(mode.includes('SQUAD')) { html += `<div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-gray-600"><p class="text-xs font-bold text-gray-500 mb-2 uppercase">Player 3</p><input id="p3-name" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm mb-2" placeholder="Teammate Name"><input id="p3-uid" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm" placeholder="Teammate UID"></div><div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-gray-600"><p class="text-xs font-bold text-gray-500 mb-2 uppercase">Player 4</p><input id="p4-name" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm mb-2" placeholder="Teammate Name"><input id="p4-uid" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm" placeholder="Teammate UID"></div>`; }
+            container.innerHTML = html;
+        }
+
+        // Match Join
         function openJoinModal(id, fee, mode) {
             if(user.balance < fee) return alert("Insufficient Balance");
-            selectedMatchId = id;
-            selectedMatchMode = mode.toUpperCase();
-            
+            selectedMatchId = id; selectedMatchMode = mode.toUpperCase();
             document.getElementById('join-match-mode').innerText = selectedMatchMode;
-            const container = document.getElementById('join-inputs');
-            container.innerHTML = ''; 
-
-            // Player 1 (Leader - You)
-            let html = `
-                <div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-gray-600">
-                    <p class="text-xs font-bold text-indigo-500 mb-2 uppercase">Player 1 (Leader)</p>
-                    <input id="p1-name" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm mb-2" placeholder="In-Game Name" value="${user.name}">
-                    <input id="p1-uid" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm mb-2" placeholder="Game UID">
-                    <input id="p1-mobile" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm" placeholder="Mobile" value="${user.mobile}" readonly>
-                </div>
-            `;
-
-            // Player 2
-            if(selectedMatchMode.includes('DUO') || selectedMatchMode.includes('SQUAD')) {
-                html += `
-                <div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-gray-600">
-                    <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Player 2</p>
-                    <input id="p2-name" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm mb-2" placeholder="Teammate Name">
-                    <input id="p2-uid" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm" placeholder="Teammate UID">
-                </div>`;
-            }
-
-            // Player 3 & 4
-            if(selectedMatchMode.includes('SQUAD')) {
-                html += `
-                <div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-gray-600">
-                    <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Player 3</p>
-                    <input id="p3-name" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm mb-2" placeholder="Teammate Name">
-                    <input id="p3-uid" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm" placeholder="Teammate UID">
-                </div>
-                <div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-gray-600">
-                    <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Player 4</p>
-                    <input id="p4-name" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm mb-2" placeholder="Teammate Name">
-                    <input id="p4-uid" class="w-full p-2 bg-white dark:bg-slate-700 rounded-lg border text-sm" placeholder="Teammate UID">
-                </div>`;
-            }
-
-            container.innerHTML = html;
+            generateInputs(document.getElementById('join-inputs'), selectedMatchMode);
             openModal('join-modal');
         }
-
         function confirmJoin() {
-            const p1Name = document.getElementById('p1-name').value;
-            const p1Uid = document.getElementById('p1-uid').value;
-            const p1Mobile = document.getElementById('p1-mobile').value;
+            const p1Name = document.getElementById('p1-name').value; const p1Uid = document.getElementById('p1-uid').value; const p1Mobile = document.getElementById('p1-mobile').value;
             if(!p1Name || !p1Uid) return alert("Player 1 details required!");
-
-            // Build Display String based on Mode
-            let displayString = `${p1Name}`;
-            let fullDetails = `Leader: ${p1Name} (${p1Uid})\nMobile: ${p1Mobile}`;
-
-            if(selectedMatchMode.includes('DUO') || selectedMatchMode.includes('SQUAD')) {
-                const p2n = document.getElementById('p2-name').value;
-                const p2u = document.getElementById('p2-uid').value;
-                if(p2n) fullDetails += `\nP2: ${p2n} (${p2u})`;
-                displayString += " +1";
-            }
-            if(selectedMatchMode.includes('SQUAD')) {
-                const p3n = document.getElementById('p3-name').value;
-                const p4n = document.getElementById('p4-name').value;
-                if(p3n) fullDetails += `\nP3: ${p3n}`;
-                if(p4n) fullDetails += `\nP4: ${p4n}`;
-                displayString = `${p1Name} +3`;
-            }
-
-            db.ref(`tournaments/${selectedMatchId}`).once('value', s => {
-                const t = s.val();
-                if(t.participants && Object.keys(t.participants).length >= t.maxSlots) return alert("Full!");
-                
-                db.ref().update({
-                    [`users/${user.uid}/balance`]: user.balance - t.fee,
-                    [`tournaments/${selectedMatchId}/participants/${user.uid}`]: {
-                        ffName: displayString, // Short for list
-                        ffUid: p1Uid,
-                        mobile: p1Mobile,
-                        fullTeam: fullDetails // Full info for admin
-                    }
-                }).then(() => {
-                    closeModal('join-modal');
-                    alert("Joined Successfully!");
-                });
-            });
+            let displayString = `${p1Name} (L)`;
+            if(selectedMatchMode.includes('DUO')) displayString += " +1";
+            if(selectedMatchMode.includes('SQUAD')) displayString += " +3";
+            db.ref(`tournaments/${selectedMatchId}`).once('value', s => { const t = s.val(); if(t.participants && Object.keys(t.participants).length >= t.maxSlots) return alert("Full!"); db.ref().update({[`users/${user.uid}/balance`]: user.balance - t.fee,[`tournaments/${selectedMatchId}/participants/${user.uid}`]: { ffName: displayString, ffUid: p1Uid, mobile: p1Mobile }}).then(() => { closeModal('join-modal'); alert("Joined Successfully!"); }); });
         }
 
-        function submitDeposit() {
-            const amt = document.getElementById('pay-amount').value;
-            const senderNum = document.getElementById('pay-sender-num').value;
-            const file = document.getElementById('pay-proof').files[0];
-            if(!amt || !senderNum || !file) return alert("Fill all fields");
-            if(file.size > 500*1024) return alert("File too large (Max 500KB)");
-            const btn = document.getElementById('btn-submit-pay'); btn.disabled = true; btn.innerText = "Processing...";
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function(e) {
-                const img = new Image(); img.src = e.target.result;
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = 500; canvas.height = img.height * (500/img.width);
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    db.ref('payment_requests').push({ userId: user.uid, userName: user.name, userMobile: user.mobile, senderMobile: senderNum, amount: Number(amt), proof: canvas.toDataURL('image/jpeg', 0.5), status: 'pending', date: firebase.database.ServerValue.TIMESTAMP }).then(() => { alert("Request Sent!"); closeModal('payment-modal'); btn.disabled = false; btn.innerText = "Submit Request"; });
-                }
-            }
+        // Giveaway Join (NEW DYNAMIC)
+        function openGiveawayJoinModal(id, mode) {
+            selectedGiveawayId = id; selectedGiveawayMode = mode.toUpperCase();
+            document.getElementById('giveaway-match-mode').innerText = selectedGiveawayMode;
+            generateInputs(document.getElementById('giveaway-inputs'), selectedGiveawayMode);
+            openModal('giveaway-modal');
         }
-        
-        function submitHackerReport() { const uid = document.getElementById('h-uid').value, mob = document.getElementById('h-mobile').value, file = document.getElementById('h-video').files[0]; if(!uid || !mob || !file) return alert("All fields required"); const btn = document.getElementById('btn-report'); btn.disabled = true; btn.innerText = "Uploading..."; const ref = storage.ref(`reports/${Date.now()}_${uid}`); const task = ref.put(file); task.on('state_changed', (snap) => { btn.innerText = "Uploading " + Math.floor((snap.bytesTransferred / snap.totalBytes) * 100) + "%"; }, (err) => { alert("Upload Failed (Check Rules)"); btn.disabled = false; btn.innerText = "Submit Report"; }, () => { task.snapshot.ref.getDownloadURL().then(url => { db.ref('hacker_reports').push({ hackerUid: uid, reporterMobile: mob, video: url, date: firebase.database.ServerValue.TIMESTAMP }).then(() => { closeModal('hacker-modal'); alert("Report Submitted"); btn.disabled = false; btn.innerText = "Submit Report"; }); }); }); }
+        function confirmGiveawayJoin() {
+            const p1Name = document.getElementById('p1-name').value; const p1Uid = document.getElementById('p1-uid').value; const p1Mobile = document.getElementById('p1-mobile').value;
+            if(!p1Name || !p1Uid) return alert("Player 1 details required!");
+            let displayString = `${p1Name} (L)`;
+            if(selectedGiveawayMode.includes('DUO')) displayString += " +1";
+            if(selectedGiveawayMode.includes('SQUAD')) displayString += " +3";
+            db.ref(`giveaways/${selectedGiveawayId}/participants/${user.uid}`).set({ffName: displayString, ffUid: p1Uid, mobile: p1Mobile, joinedAt:Date.now()}).then(()=>{closeModal('giveaway-modal');alert("Joined!");});
+        }
 
+        // --- OTHER FUNCTIONS ---
+        function submitDeposit(){const a=document.getElementById('pay-amount').value,s=document.getElementById('pay-sender-num').value,f=document.getElementById('pay-proof').files[0];if(!a||!s||!f)return alert("Fill fields");const btn=document.getElementById('btn-submit-pay');btn.disabled=true;btn.innerText="Processing...";const r=new FileReader();r.readAsDataURL(f);r.onload=e=>{const img=new Image();img.src=e.target.result;img.onload=()=>{const c=document.createElement('canvas');const x=c.getContext('2d');c.width=500;c.height=img.height*(500/img.width);x.drawImage(img,0,0,c.width,c.height);db.ref('payment_requests').push({userId:user.uid,userName:user.name,userMobile:user.mobile,senderMobile:s,amount:Number(a),proof:c.toDataURL('image/jpeg',0.5),status:'pending',date:Date.now()}).then(()=>{alert("Request Sent!");closeModal('payment-modal');btn.disabled=false;btn.innerText="Submit Request";});}}}
+        function submitWithdraw(){const a=Number(document.getElementById('w-amount').value),n=document.getElementById('w-number').value;if(a>user.balance)return alert("Low Balance");db.ref().update({[`withdraw_requests/${db.ref().push().key}`]:{userId:user.uid,amount:a,mobile:n,status:'pending'},[`users/${user.uid}/balance`]:user.balance-a}).then(()=>{closeModal('withdraw-modal');alert("Requested");});}
         function openHelpModal(){document.getElementById('help-username').value=user.name;document.getElementById('help-mobile').value=user.mobile;openModal('help-modal');}
-        function submitHelp(){const r=document.getElementById('help-reason').value, m=document.getElementById('help-message').value;db.ref('help_requests').push({reason:r,message:m,userName:document.getElementById('help-username').value,mobile:document.getElementById('help-mobile').value,token:document.getElementById('help-token').value}).then(()=>{closeModal('help-modal');alert("Sent!");});}
-        function submitWithdraw(){const a=Number(document.getElementById('w-amount').value), n=document.getElementById('w-number').value;if(a>user.balance)return alert("Low Balance");db.ref().update({[`withdraw_requests/${db.ref().push().key}`]:{userId:user.uid,amount:a,mobile:n,status:'pending'},[`users/${user.uid}/balance`]:user.balance-a}).then(()=>{closeModal('withdraw-modal');alert("Requested");});}
-
-        function openModal(id){document.getElementById(id).classList.remove('hidden');}
-        function closeModal(id){document.getElementById(id).classList.add('hidden');}
-        function logout(){localStorage.removeItem('arena_uid'); location.reload();}
-        function toggleTheme(){if(document.documentElement.classList.contains('dark')){document.documentElement.classList.remove('dark');localStorage.setItem('theme','light');}else{document.documentElement.classList.add('dark');localStorage.setItem('theme','dark');}}
-        function toggleNotifications(){alert("Toggled");}
-        function loadHistory(){document.getElementById('payment-history').innerHTML="Loading...";}
+        function submitHelp(){const r=document.getElementById('help-reason').value,m=document.getElementById('help-message').value;db.ref('help_requests').push({reason:r,message:m,userName:document.getElementById('help-username').value,mobile:document.getElementById('help-mobile').value,token:document.getElementById('help-token').value}).then(()=>{closeModal('help-modal');alert("Sent!");});}
+        function submitHackerReport(){const u=document.getElementById('h-uid').value,f=document.getElementById('h-video').files[0];if(!u||!f)return alert("Fill all");const b=document.getElementById('btn-report');b.disabled=true;b.innerText="Uploading...";const r=storage.ref(`reports/${Date.now()}_${u}`);const t=r.put(f);t.on('state_changed',s=>{b.innerText="Uploading "+Math.floor((s.bytesTransferred/s.totalBytes)*100)+"%"},e=>{alert("Error");b.disabled=false;b.innerText="Submit"},()=>{t.snapshot.ref.getDownloadURL().then(v=>{db.ref('hacker_reports').push({hackerUid:u,video:v}).then(()=>{closeModal('hacker-modal');alert("Reported");b.disabled=false;b.innerText="Submit"});});});}
+        
+        function openModal(id){document.getElementById(id).classList.remove('hidden');} function closeModal(id){document.getElementById(id).classList.add('hidden');} function logout(){localStorage.removeItem('arena_uid'); location.reload();} function loadHistory(){document.getElementById('payment-history').innerHTML="Loading...";} function toggleTheme(){if(document.documentElement.classList.contains('dark')){document.documentElement.classList.remove('dark');localStorage.setItem('theme','light');}else{document.documentElement.classList.add('dark');localStorage.setItem('theme','dark');}} function toggleNotifications(){alert("Toggled");}
         function showRoom(k){db.ref(`tournaments/${k}`).once('value',s=>{const t=s.val();document.getElementById('d-room-id').innerText=t.roomId||"Wait";document.getElementById('d-room-pass').innerText=t.roomPass||"Wait";openModal('room-modal');});}
-        function openGiveawayJoinModal(k){selectedGiveawayId=k;openModal('giveaway-modal');}
-        function confirmGiveawayJoin(){const n=document.getElementById('g-join-name').value,u=document.getElementById('g-join-uid').value,m=document.getElementById('g-join-mobile').value;db.ref(`giveaways/${selectedGiveawayId}/participants/${user.uid}`).set({ffName:n,ffUid:u,mobile:m,joinedAt:Date.now()}).then(()=>{closeModal('giveaway-modal');alert("Joined!");});}
 
         switchHomeTab('matches');
         initApp();
