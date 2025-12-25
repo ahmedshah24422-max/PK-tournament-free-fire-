@@ -3,16 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arena - Play & Earn</title>
+    <title>Arena - Pro Gaming</title>
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        const APP_VERSION = "1.0"; 
         tailwind.config = {
             darkMode: 'class',
             theme: { 
                 extend: { 
-                    colors: { darkBg: '#0f172a', darkCard: '#1e293b', darkText: '#f8fafc' },
+                    colors: { 
+                        darkBg: '#0f172a', 
+                        darkCard: '#1e293b', 
+                        darkText: '#f8fafc',
+                        primary: '#4f46e5', // Indigo
+                        secondary: '#9333ea' // Purple
+                    },
                     animation: { 'bounce-short': 'bounce 0.5s infinite' }
                 } 
             }
@@ -28,386 +34,428 @@
 
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .btn-anim:active { transform: scale(0.95); }
-        .tab-active { border-bottom: 2px solid #3b82f6; color: #3b82f6; transition: all 0.3s; }
-        .tab-inactive { color: #9ca3af; transition: all 0.3s; }
-        .nav-active { color: #3b82f6; transform: translateY(-2px); transition: all 0.3s; }
-        .nav-inactive { color: #9ca3af; transition: all 0.3s; }
-        .filter-mode-active { background-color: #2563eb; color: white; }
-        .filter-mode-inactive { background-color: #f3f4f6; color: #6b7280; }
-        .dark .filter-mode-inactive { background-color: #334155; color: #94a3b8; }
-        .filter-type-active { color: #2563eb; border-bottom: 2px solid #2563eb; }
+        .btn-press:active { transform: scale(0.95); transition: transform 0.1s; }
+        
+        .nav-item.active { color: #4f46e5; transform: translateY(-4px); }
+        .nav-item.active i { background: rgba(79, 70, 229, 0.1); border-radius: 12px; padding: 6px; }
+        .nav-item { color: #94a3b8; transition: all 0.3s ease; }
+        
+        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+        .dark .glass { background: rgba(30, 41, 59, 0.9); }
+        
+        .filter-type-active { color: #4f46e5; border-bottom: 2px solid #4f46e5; }
+        .filter-mode-active { background-color: #4f46e5; color: white; }
+        .filter-mode-inactive { background-color: white; color: #4b5563; }
+        .dark .filter-mode-inactive { background-color: #334155; color: #9ca3af; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .animate-fade { animation: fadeIn 0.4s ease-out; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-slide-up { animation: slideUp 0.5s ease-out forwards; }
+        .animate-slide-up { animation: slideUp 0.4s ease-out forwards; }
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
         .animate-pop { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-darkBg text-gray-800 dark:text-gray-200 font-sans antialiased min-h-screen select-none transition-colors duration-300">
+<body class="bg-gray-100 dark:bg-darkBg text-gray-800 dark:text-gray-200 font-sans antialiased min-h-screen select-none transition-colors duration-300 pb-24">
 
-    <div class="max-w-md mx-auto bg-gray-50 dark:bg-slate-900 min-h-screen relative shadow-2xl overflow-hidden pb-36 transition-colors duration-300">
+    <div class="max-w-md mx-auto bg-gray-50 dark:bg-slate-900 min-h-screen relative shadow-2xl overflow-hidden">
         
         <!-- HEADER -->
-        <header class="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 shadow-lg sticky top-0 z-40">
+        <header class="bg-gradient-to-r from-primary to-secondary p-5 rounded-b-3xl shadow-lg sticky top-0 z-40">
             <div class="flex justify-between items-center text-white">
-                <div class="flex items-center gap-2"><i class="fa-solid fa-gamepad text-2xl animate-pulse"></i><h1 class="text-xl font-bold tracking-wide italic">ARENA</h1></div>
+                <div class="flex items-center gap-2">
+                    <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm"><i class="fa-solid fa-gamepad text-xl"></i></div>
+                    <h1 class="text-2xl font-black italic tracking-wider">ARENA</h1>
+                </div>
                 <div class="flex items-center gap-3">
-                    <div class="relative cursor-pointer btn-anim" onclick="alert('No new notifications')">
-                        <i class="fa-solid fa-bell text-xl hover:rotate-12 transition-transform"></i>
-                    </div>
-                    <div id="header-balance" class="bg-black/20 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-bold border border-white/10 hidden animate-fade">₹0</div>
+                    <div id="header-balance" class="bg-black/30 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-bold border border-white/10 hidden animate-pop">₹0</div>
+                    <button class="relative btn-press" onclick="alert('No Notifications')">
+                        <i class="fa-solid fa-bell text-xl"></i>
+                    </button>
                 </div>
             </div>
         </header>
 
         <!-- LOGIN SCREEN -->
-        <div id="auth-screen" class="p-6 flex flex-col justify-center h-[85vh] animate-fade">
-            <div class="text-center mb-10">
-                <div class="w-24 h-24 bg-blue-100 dark:bg-slate-800 rounded-full mx-auto flex items-center justify-center text-4xl text-blue-600 mb-4 shadow-inner animate-bounce-short"><i class="fa-solid fa-user-ninja"></i></div>
-                <h2 class="text-3xl font-bold dark:text-white">Welcome</h2>
-                <p class="text-gray-500 dark:text-gray-400 mt-2">Enter details to start playing.</p>
+        <div id="auth-screen" class="p-6 flex flex-col justify-center h-[80vh] animate-pop">
+            <div class="text-center mb-8">
+                <div class="w-24 h-24 bg-gradient-to-tr from-primary to-secondary rounded-full mx-auto flex items-center justify-center text-5xl text-white mb-4 shadow-xl">
+                    <i class="fa-solid fa-user-astronaut"></i>
+                </div>
+                <h2 class="text-3xl font-bold dark:text-white">Welcome Back</h2>
+                <p class="text-gray-500 text-sm mt-1">Join the ultimate gaming battles.</p>
             </div>
-            <div class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-xl text-center transform transition hover:scale-[1.02] duration-300">
-                <input type="text" id="login-name" placeholder="Full Name" class="w-full mb-3 p-3 rounded-xl border bg-gray-50 dark:bg-slate-800 dark:border-gray-600 dark:text-white text-center font-bold focus:ring-2 focus:ring-blue-500 outline-none">
-                <input type="tel" id="login-phone" placeholder="Mobile Number" class="w-full mb-6 p-3 rounded-xl border bg-gray-50 dark:bg-slate-800 dark:border-gray-600 dark:text-white text-center font-bold tracking-widest focus:ring-2 focus:ring-blue-500 outline-none">
-                <button id="btn-login" onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg btn-anim text-lg transition-colors">Let's Play</button>
+            
+            <div class="bg-white dark:bg-darkCard p-6 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700">
+                <div class="space-y-4">
+                    <div class="relative">
+                        <i class="fa-solid fa-user absolute left-4 top-3.5 text-gray-400"></i>
+                        <input type="text" id="login-name" placeholder="Full Name" class="w-full pl-10 p-3 bg-gray-50 dark:bg-slate-800 rounded-xl border-none outline-none focus:ring-2 focus:ring-primary transition">
+                    </div>
+                    <div class="relative">
+                        <i class="fa-solid fa-phone absolute left-4 top-3.5 text-gray-400"></i>
+                        <input type="tel" id="login-phone" placeholder="Mobile (03xxxxxxxxx)" class="w-full pl-10 p-3 bg-gray-50 dark:bg-slate-800 rounded-xl border-none outline-none focus:ring-2 focus:ring-primary transition" maxlength="11">
+                    </div>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-4 top-3.5 text-gray-400"></i>
+                        <input type="password" id="login-pass" placeholder="Password" class="w-full pl-10 p-3 bg-gray-50 dark:bg-slate-800 rounded-xl border-none outline-none focus:ring-2 focus:ring-primary transition">
+                    </div>
+                </div>
+                <button id="btn-login" onclick="handleLogin()" class="w-full bg-primary hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg mt-6 btn-press text-lg">
+                    Login / Register <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
             </div>
         </div>
 
-        <!-- APP SCREENS -->
-        <div id="app-screens" class="hidden">
-            <!-- HOME -->
-            <div id="screen-home" class="relative animate-fade">
-                <div class="bg-white dark:bg-darkCard shadow-sm sticky top-0 z-40 px-4 py-3 border-b dark:border-gray-700">
-                    <div class="flex justify-around mb-2 border-b dark:border-gray-600 pb-2">
-                        <button onclick="switchHomeTab('matches')" id="htab-matches" class="flex-1 pb-1 font-bold tab-active">Matches</button>
-                        <button onclick="switchHomeTab('giveaways')" id="htab-giveaways" class="flex-1 pb-1 font-bold tab-inactive">Giveaways</button>
+        <!-- BANNED SCREEN -->
+        <div id="banned-screen" class="hidden fixed inset-0 z-[100] bg-red-600 flex flex-col items-center justify-center p-6 text-white text-center">
+            <div class="bg-white text-red-600 w-24 h-24 rounded-full flex items-center justify-center text-5xl mb-6 shadow-lg animate-bounce"><i class="fa-solid fa-ban"></i></div>
+            <h1 class="text-3xl font-black mb-2 uppercase">BANNED</h1>
+            <p id="ban-reason-text" class="text-lg font-bold bg-black/20 px-4 py-2 rounded-lg">Violation</p>
+            <button onclick="logout()" class="mt-8 bg-white text-red-600 px-8 py-3 rounded-full font-bold shadow-xl btn-press">Log Out</button>
+        </div>
+
+        <!-- APP CONTENT AREA -->
+        <div id="app-screens" class="hidden p-4">
+            
+            <!-- 1. HOME TAB -->
+            <div id="screen-home" class="animate-slide-up">
+                <div class="flex p-1 bg-gray-200 dark:bg-slate-800 rounded-xl mb-4">
+                    <button onclick="switchHomeTab('matches')" id="htab-matches" class="flex-1 py-2 rounded-lg text-sm font-bold bg-white dark:bg-slate-600 shadow-sm text-primary transition-all">Matches</button>
+                    <button onclick="switchHomeTab('giveaways')" id="htab-giveaways" class="flex-1 py-2 rounded-lg text-sm font-bold text-gray-500 hover:text-gray-700 transition-all">Giveaways</button>
+                </div>
+
+                <div id="matches-filters" class="mb-4">
+                    <div class="flex gap-6 mb-3 px-2">
+                        <button onclick="setFilterType('All')" id="btn-type-All" class="filter-type-active text-sm font-bold pb-1 transition">All</button>
+                        <button onclick="setFilterType('CS')" id="btn-type-CS" class="text-sm font-bold text-gray-400 hover:text-primary pb-1 transition">CS</button>
+                        <button onclick="setFilterType('BR')" id="btn-type-BR" class="text-sm font-bold text-gray-400 hover:text-primary pb-1 transition">BR</button>
                     </div>
-                    <!-- FILTERS -->
-                    <div id="matches-filters" class="pt-2 animate-slide-up">
-                        <div class="flex gap-6 text-sm font-bold text-gray-400 dark:text-gray-500 mb-3 pb-1">
-                            <button onclick="setFilterType('All')" id="btn-type-All" class="filter-type-active pb-1 transition">All</button>
-                            <button onclick="setFilterType('CS')" id="btn-type-CS" class="hover:text-blue-500 pb-1 transition">CS</button>
-                            <button onclick="setFilterType('BR')" id="btn-type-BR" class="hover:text-blue-500 pb-1 transition">BR</button>
-                        </div>
-                        <div class="flex gap-2 overflow-x-auto no-scrollbar">
-                            <button onclick="setFilterMode('All')" id="btn-mode-All" class="filter-mode-active px-4 py-1.5 rounded-full text-xs font-bold transition shadow-sm btn-anim">All</button>
-                            <button onclick="setFilterMode('Squad')" id="btn-mode-Squad" class="filter-mode-inactive px-4 py-1.5 rounded-full text-xs font-bold transition btn-anim">SQUAD</button>
-                            <button onclick="setFilterMode('Duo')" id="btn-mode-Duo" class="filter-mode-inactive px-4 py-1.5 rounded-full text-xs font-bold transition btn-anim">DUO</button>
-                            <button onclick="setFilterMode('Solo')" id="btn-mode-Solo" class="filter-mode-inactive px-4 py-1.5 rounded-full text-xs font-bold transition btn-anim">SOLO</button>
-                        </div>
+                    <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+                        <button onclick="setFilterMode('All')" id="btn-mode-All" class="px-4 py-1.5 rounded-full text-xs font-bold bg-primary text-white shadow-md btn-press transition">All</button>
+                        <button onclick="setFilterMode('Squad')" id="btn-mode-Squad" class="px-4 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-slate-700 text-gray-600 dark:text-gray-300 shadow-sm btn-press transition">Squad</button>
+                        <button onclick="setFilterMode('Duo')" id="btn-mode-Duo" class="px-4 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-slate-700 text-gray-600 dark:text-gray-300 shadow-sm btn-press transition">Duo</button>
+                        <button onclick="setFilterMode('Solo')" id="btn-mode-Solo" class="px-4 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-slate-700 text-gray-600 dark:text-gray-300 shadow-sm btn-press transition">Solo</button>
                     </div>
                 </div>
-                <div class="p-4 space-y-5">
-                    <div id="view-matches"><div id="tournament-list" class="space-y-4 pb-4 min-h-[300px]"><div class="text-center text-gray-400 mt-10 animate-pulse">Loading Matches...</div></div></div>
-                    <div id="view-giveaways" class="hidden"><div id="giveaway-list" class="space-y-4 pb-4 min-h-[300px]"><div class="text-center text-gray-400 mt-10 animate-pulse">Loading Giveaways...</div></div></div>
+
+                <div id="view-matches"><div id="tournament-list" class="space-y-4 pb-20"></div></div>
+                <div id="view-giveaways" class="hidden"><div id="giveaway-list" class="space-y-4 pb-20"></div></div>
+            </div>
+
+            <!-- 2. WALLET TAB -->
+            <div id="screen-wallet" class="hidden animate-slide-up">
+                <div class="bg-gradient-to-br from-primary to-purple-600 rounded-3xl p-6 text-white shadow-xl mb-6 text-center relative overflow-hidden">
+                    <div class="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+                    <p class="text-indigo-100 text-sm font-medium uppercase tracking-wider">Total Balance</p>
+                    <h1 class="text-5xl font-black mt-2 mb-6">₹<span id="wallet-balance">0</span></h1>
+                    <div class="flex gap-4 justify-center">
+                        <button onclick="openModal('payment-modal')" class="flex-1 bg-white text-primary py-3 rounded-xl font-bold shadow-lg btn-press flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i> Add Cash</button>
+                        <button onclick="openModal('withdraw-modal')" class="flex-1 bg-black/20 border border-white/20 text-white py-3 rounded-xl font-bold btn-press flex items-center justify-center gap-2"><i class="fa-solid fa-arrow-up"></i> Withdraw</button>
+                    </div>
+                </div>
+                <h3 class="font-bold text-gray-700 dark:text-gray-300 mb-3 px-2">Transaction History</h3>
+                <div id="payment-history" class="bg-white dark:bg-darkCard rounded-2xl p-4 shadow-sm min-h-[150px]">
+                    <p class="text-center text-gray-400 text-sm mt-10">No recent transactions</p>
                 </div>
             </div>
 
-            <!-- WALLET -->
-            <div id="screen-wallet" class="hidden p-4 animate-fade">
-                <div class="bg-gradient-to-br from-indigo-600 to-blue-500 rounded-2xl p-6 text-white shadow-xl mb-6 text-center relative overflow-hidden transform hover:scale-[1.01] transition duration-300">
-                    <div class="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_2s_infinite]"></div>
-                    <p class="text-blue-100 text-sm font-medium">Total Balance</p>
-                    <h1 class="text-5xl font-bold mt-2" id="wallet-balance">₹0</h1>
-                    <div class="flex gap-3 justify-center mt-6 relative z-10">
-                        <button onclick="openModal('payment-modal')" class="bg-white text-blue-600 px-6 py-2 rounded-full font-bold shadow-lg btn-anim hover:bg-gray-50 transition">Add Cash</button>
-                        <button onclick="openModal('withdraw-modal')" class="bg-white/20 text-white border border-white/40 px-6 py-2 rounded-full font-bold shadow-lg btn-anim hover:bg-white/30 transition">Withdraw</button>
+            <!-- 3. PROFILE TAB -->
+            <div id="screen-profile" class="hidden animate-slide-up">
+                <div class="bg-white dark:bg-darkCard rounded-3xl p-6 text-center shadow-lg border border-gray-100 dark:border-gray-700 mb-6">
+                    <div class="w-20 h-20 bg-gray-100 dark:bg-slate-700 rounded-full mx-auto mb-3 flex items-center justify-center text-3xl text-gray-400">
+                        <i class="fa-solid fa-user"></i>
                     </div>
+                    <h2 id="profile-name" class="font-bold text-xl">Guest User</h2>
+                    <p class="text-sm text-gray-500" id="profile-phone">--</p>
                 </div>
-                <div class="bg-white dark:bg-darkCard rounded-xl shadow-sm border dark:border-gray-700 p-6 animate-slide-up">
-                    <h4 class="font-bold text-gray-700 dark:text-gray-300 mb-2 border-b dark:border-gray-700 pb-2">History</h4>
-                    <div id="payment-history" class="text-sm text-gray-500 space-y-2 h-40 overflow-y-auto">Loading...</div>
-                </div>
-            </div>
 
-            <!-- PROFILE (WITH HELP & HACKER REPORT) -->
-            <div id="screen-profile" class="hidden p-4 animate-fade">
-                <div class="bg-white dark:bg-darkCard rounded-2xl shadow-sm border dark:border-gray-700 p-6 text-center mb-5 transform transition hover:translate-y-[-2px]">
-                    <div class="w-24 h-24 bg-gray-100 dark:bg-slate-800 rounded-full mx-auto mb-3 flex items-center justify-center text-4xl text-gray-400 shadow-inner"><i class="fa-solid fa-user"></i></div>
-                    <h2 id="profile-name" class="font-bold text-xl text-gray-800 dark:text-white">Player</h2>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1"><span id="profile-phone">...</span></p>
+                <div class="space-y-3">
+                    <button onclick="openHelpModal()" class="w-full bg-white dark:bg-darkCard p-4 rounded-xl shadow-sm flex justify-between items-center btn-press">
+                        <div class="flex items-center gap-3 text-blue-600"><i class="fa-solid fa-headset bg-blue-50 p-2 rounded-lg"></i> <span class="font-bold text-gray-700 dark:text-gray-200">Help & Support</span></div>
+                        <i class="fa-solid fa-chevron-right text-gray-400"></i>
+                    </button>
+                    <button onclick="openModal('hacker-modal')" class="w-full bg-white dark:bg-darkCard p-4 rounded-xl shadow-sm flex justify-between items-center btn-press">
+                        <div class="flex items-center gap-3 text-red-600"><i class="fa-solid fa-shield-halved bg-red-50 p-2 rounded-lg"></i> <span class="font-bold text-gray-700 dark:text-gray-200">Report Hacker</span></div>
+                        <i class="fa-solid fa-chevron-right text-gray-400"></i>
+                    </button>
                 </div>
                 
-                <!-- HELP & SUPPORT (RESTORED) -->
-                <button onclick="openHelpModal()" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl shadow-md mb-3 flex items-center justify-between btn-anim hover:bg-blue-700 transition">
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-headset"></i> Help & Support</span><i class="fa-solid fa-chevron-right"></i>
-                </button>
-
-                <!-- REPORT HACKER -->
-                <button onclick="openModal('hacker-modal')" class="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-xl shadow-md mb-4 flex items-center justify-between btn-anim hover:bg-red-700 transition">
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-user-secret"></i> Report Hacker</span><i class="fa-solid fa-chevron-right"></i>
-                </button>
-
-                <div class="bg-white dark:bg-darkCard rounded-xl shadow-sm border dark:border-gray-700 overflow-hidden mb-5 animate-slide-up">
+                <!-- Settings -->
+                <div class="bg-white dark:bg-darkCard rounded-xl shadow-sm border dark:border-gray-700 overflow-hidden mb-5 mt-4">
                     <h3 class="bg-gray-50 dark:bg-slate-800 px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider">Settings</h3>
-                    <div class="p-4 flex justify-between items-center border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition">
+                    <div class="p-4 flex justify-between items-center border-b dark:border-gray-700">
                         <div class="flex items-center gap-3"><div class="bg-blue-50 dark:bg-slate-800 text-blue-600 p-2 rounded-lg"><i class="fa-solid fa-bell"></i></div><span class="font-bold text-gray-700 dark:text-gray-300">Notifications</span></div>
-                        <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="notif-toggle" class="sr-only peer" onchange="toggleNotifications()"><div class="w-11 h-6 bg-gray-200 dark:bg-slate-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 transition-all"></div></label>
+                        <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="notif-toggle" class="sr-only peer" onchange="toggleNotifications()"><div class="w-11 h-6 bg-gray-200 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div></label>
                     </div>
-                    <div class="p-4 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-slate-800/50 transition">
+                    <div class="p-4 flex justify-between items-center">
                         <div class="flex items-center gap-3"><div class="bg-purple-50 dark:bg-slate-800 text-purple-600 p-2 rounded-lg"><i class="fa-solid fa-moon"></i></div><span class="font-bold text-gray-700 dark:text-gray-300">Dark Theme</span></div>
-                        <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="theme-toggle" class="sr-only peer" onchange="toggleTheme()"><div class="w-11 h-6 bg-gray-200 dark:bg-slate-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600 transition-all"></div></label>
+                        <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="theme-toggle" class="sr-only peer" onchange="toggleTheme()"><div class="w-11 h-6 bg-gray-200 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div></label>
                     </div>
                 </div>
-                <button onclick="logout()" class="w-full bg-red-50 dark:bg-red-900/20 text-red-500 font-bold py-3.5 rounded-xl border border-red-100 dark:border-red-900 btn-anim hover:bg-red-100 dark:hover:bg-red-900/30 transition">Log Out</button>
+
+                <button onclick="logout()" class="w-full bg-red-50 dark:bg-red-900/10 p-4 rounded-xl shadow-sm flex justify-center text-red-500 font-bold btn-press mt-2">Log Out</button>
             </div>
+
         </div>
 
-        <!-- FIXED BOTTOM NAVIGATION -->
-        <div id="bottom-nav" class="hidden fixed bottom-0 left-0 right-0 max-w-md mx-auto w-full bg-white dark:bg-darkCard border-t dark:border-gray-700 flex justify-around p-3 z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.1)]">
-            <button onclick="switchScreen('home')" id="nav-home" class="flex flex-col items-center nav-active btn-anim">
-                <i class="fa-solid fa-house text-xl mb-1"></i><span class="text-[10px] font-bold">Home</span>
-            </button>
-            <button onclick="switchScreen('wallet')" id="nav-wallet" class="flex flex-col items-center nav-inactive btn-anim">
-                <i class="fa-solid fa-wallet text-xl mb-1"></i><span class="text-[10px] font-bold">Wallet</span>
-            </button>
-            <button onclick="switchScreen('profile')" id="nav-profile" class="flex flex-col items-center nav-inactive btn-anim">
-                <i class="fa-solid fa-user text-xl mb-1"></i><span class="text-[10px] font-bold">Profile</span>
-            </button>
+        <!-- BOTTOM NAVIGATION -->
+        <div id="bottom-nav" class="hidden fixed bottom-4 left-4 right-4 bg-white dark:bg-darkCard rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 p-2 flex justify-around items-center z-50 glass">
+            <button onclick="switchScreen('home')" id="nav-home" class="nav-item active flex flex-col items-center w-full py-2 btn-press"><i class="fa-solid fa-house text-xl mb-1"></i><span class="text-[10px] font-bold">Home</span></button>
+            <button onclick="switchScreen('wallet')" id="nav-wallet" class="nav-item flex flex-col items-center w-full py-2 btn-press"><i class="fa-solid fa-wallet text-xl mb-1"></i><span class="text-[10px] font-bold">Wallet</span></button>
+            <button onclick="switchScreen('profile')" id="nav-profile" class="nav-item flex flex-col items-center w-full py-2 btn-press"><i class="fa-solid fa-user text-xl mb-1"></i><span class="text-[10px] font-bold">Profile</span></button>
         </div>
 
         <!-- MODALS -->
-        <div id="join-modal" class="hidden fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
-            <div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-2xl p-6 animate-pop shadow-2xl">
-                <h3 class="text-lg font-bold mb-4 dark:text-white">Join Match</h3>
-                <input type="text" id="join-ff-name" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-2 bg-gray-50 dark:bg-slate-800 dark:text-white focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Game Name">
-                <input type="number" id="join-ff-uid" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-2 bg-gray-50 dark:bg-slate-800 dark:text-white focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Game UID">
-                <div class="flex gap-2 mt-4"><button onclick="closeModal('join-modal')" class="flex-1 py-3 bg-gray-100 dark:bg-slate-700 dark:text-white rounded-xl font-bold btn-anim">Cancel</button><button onclick="confirmJoin()" class="flex-1 py-3 bg-blue-600 text-white rounded-xl font-bold shadow btn-anim">Join</button></div>
-            </div>
-        </div>
+        <!-- Add Money -->
+        <div id="payment-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end sm:items-center justify-center p-4 backdrop-blur-sm"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-3xl p-6 animate-pop shadow-2xl"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold dark:text-white">Add Money</h3><button onclick="closeModal('payment-modal')" class="bg-gray-100 dark:bg-slate-700 w-8 h-8 rounded-full flex items-center justify-center font-bold">✕</button></div><div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-4 rounded-xl mb-4 text-center"><p class="text-xs font-bold text-green-600 uppercase">Easypaisa Account</p><p class="text-2xl font-black text-gray-800 dark:text-white mt-1 select-all">0318 1068861</p></div><div class="space-y-3"><input type="number" id="pay-amount" class="w-full p-3 bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-600 outline-none" placeholder="Amount Sent"><input type="tel" id="pay-sender-num" class="w-full p-3 bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-600 outline-none" placeholder="Sender Account Number"><div class="relative"><p class="text-xs text-gray-500 mb-1 ml-1">Screenshot Proof</p><input type="file" id="pay-proof" accept="image/*" class="w-full p-2 bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-200 text-sm"></div></div><button id="btn-submit-pay" onclick="submitDeposit()" class="w-full bg-green-600 text-white font-bold py-3.5 rounded-xl shadow-lg mt-6 btn-press">Submit Request</button></div></div>
 
-        <div id="giveaway-modal" class="hidden fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
-            <div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-2xl p-6 animate-pop shadow-2xl">
-                <h3 class="text-lg font-bold mb-2 dark:text-white">Join Giveaway</h3>
-                <p class="text-xs text-gray-500 mb-4">Enter details to confirm entry (Free).</p>
-                <input type="text" id="g-join-name" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-2 bg-gray-50 dark:bg-slate-800 dark:text-white focus:ring-1 focus:ring-purple-500 outline-none" placeholder="FF Name">
-                <input type="number" id="g-join-uid" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-2 bg-gray-50 dark:bg-slate-800 dark:text-white focus:ring-1 focus:ring-purple-500 outline-none" placeholder="FF UID">
-                <input type="tel" id="g-join-mobile" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-4 bg-gray-50 dark:bg-slate-800 dark:text-white focus:ring-1 focus:ring-purple-500 outline-none" placeholder="Mobile Number">
-                <div class="flex gap-2"><button onclick="closeModal('giveaway-modal')" class="flex-1 py-3 bg-gray-100 dark:bg-slate-700 dark:text-white rounded-xl font-bold btn-anim">Cancel</button><button onclick="confirmGiveawayJoin()" class="flex-1 py-3 bg-purple-600 text-white rounded-xl font-bold shadow btn-anim">Confirm Join</button></div>
-            </div>
-        </div>
+        <!-- Withdraw -->
+        <div id="withdraw-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end sm:items-center justify-center p-4 backdrop-blur-sm"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-3xl p-6 animate-pop shadow-2xl"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold dark:text-white">Withdraw</h3><button onclick="closeModal('withdraw-modal')" class="bg-gray-100 w-8 h-8 rounded-full">✕</button></div><div class="space-y-3"><input type="number" id="w-amount" class="w-full p-3 bg-gray-50 rounded-xl border outline-none" placeholder="Amount"><input type="tel" id="w-number" class="w-full p-3 bg-gray-50 rounded-xl border outline-none" placeholder="Account Number"><select id="w-method" class="w-full p-3 bg-gray-50 rounded-xl border outline-none"><option>Easypaisa</option></select></div><button onclick="submitWithdraw()" class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl shadow-lg mt-6 btn-press">Request Withdraw</button></div></div>
 
-        <div id="room-modal" class="hidden fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
-            <div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-2xl p-6 text-center animate-pop shadow-2xl">
-                <h3 class="text-lg font-bold mb-2 text-green-600">Room Details</h3>
-                <div class="bg-gray-100 dark:bg-slate-800 p-4 rounded-xl mb-4"><p class="text-sm text-gray-500 dark:text-gray-400">ID:</p><p class="text-2xl font-bold select-all dark:text-white" id="d-room-id">--</p><p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Pass:</p><p class="text-2xl font-bold select-all dark:text-white" id="d-room-pass">--</p></div>
-                <button onclick="closeModal('room-modal')" class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold btn-anim">Close</button>
-            </div>
-        </div>
+        <!-- Hacker Report -->
+        <div id="hacker-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-3xl p-6 animate-pop shadow-2xl"><div class="flex justify-between items-center mb-4"><h3 class="text-lg font-bold text-red-600">Report Hacker</h3><button onclick="closeModal('hacker-modal')" class="text-gray-400">✕</button></div><input type="text" id="h-uid" class="w-full p-3 bg-gray-50 rounded-xl mb-3" placeholder="Hacker UID"><input type="tel" id="h-mobile" class="w-full p-3 bg-gray-50 rounded-xl mb-3" placeholder="Your Mobile Number"><input type="file" id="h-video" class="w-full p-2 bg-gray-50 rounded-xl mb-4"><button id="btn-report" onclick="submitHackerReport()" class="w-full bg-red-600 text-white font-bold py-3 rounded-xl shadow btn-press">Submit Report</button></div></div>
 
-        <!-- 4. DEPOSIT MODAL (BASE64 IMAGE - NO STORAGE NEEDED) -->
-        <div id="payment-modal" class="hidden fixed inset-0 bg-black/80 z-[80] flex items-center justify-center p-4 backdrop-blur-sm">
-            <div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-2xl p-6 animate-pop shadow-2xl">
-                <div class="flex justify-between items-center mb-4"><h3 class="font-bold dark:text-white">Add Money</h3><button onclick="closeModal('payment-modal')" class="dark:text-white">X</button></div>
-                <div class="bg-green-50 dark:bg-green-900/30 p-4 rounded-xl mb-4 text-center border border-green-200 dark:border-green-800"><p class="text-[10px] text-green-600 dark:text-green-400 font-bold uppercase">Easypaisa</p><h2 class="text-xl font-black text-gray-800 dark:text-white select-all">0318 1068861</h2></div>
-                <input type="number" id="pay-amount" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-2 bg-gray-50 dark:bg-slate-800 dark:text-white outline-none focus:border-green-500" placeholder="Amount Sent">
-                <input type="tel" id="pay-sender-num" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-2 bg-gray-50 dark:bg-slate-800 dark:text-white outline-none focus:border-green-500" placeholder="Sender Account Number">
-                <p class="text-xs text-gray-500 mb-1 dark:text-gray-400">Upload Screenshot (Max 300KB)</p>
-                <input type="file" id="pay-proof" accept="image/*" class="w-full p-2 border dark:border-gray-600 rounded-xl mb-4 text-sm dark:text-gray-300 bg-gray-50 dark:bg-slate-800">
-                <button id="btn-submit-pay" onclick="submitDeposit()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow btn-anim">Submit Request</button>
-            </div>
-        </div>
+        <!-- Help Modal -->
+        <div id="help-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-3xl p-6 animate-pop shadow-2xl"><div class="flex justify-between items-center mb-4"><h3 class="text-lg font-bold text-blue-600">Help & Support</h3><button onclick="closeModal('help-modal')" class="text-gray-400">✕</button></div><select id="help-reason" class="w-full p-3 bg-gray-50 rounded-xl mb-3"><option>Feedback</option><option>App Glitch</option><option>Money Not Received</option><option>Account Logged Out / Login Help</option></select><input id="help-username" class="w-full p-3 bg-gray-50 rounded-xl mb-2" placeholder="User Name"><input id="help-mobile" class="w-full p-3 bg-gray-50 rounded-xl mb-2" placeholder="Mobile Number"><input id="help-token" class="w-full p-3 bg-gray-50 rounded-xl mb-3" placeholder="Enter Token / Amount (Optional)"><textarea id="help-message" class="w-full p-3 bg-gray-50 rounded-xl mb-4 h-24" placeholder="Describe issue..."></textarea><button onclick="submitHelp()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow btn-press">Submit</button></div></div>
 
-        <!-- 5. WITHDRAW MODAL -->
-        <div id="withdraw-modal" class="hidden fixed inset-0 bg-black/80 z-[80] flex items-center justify-center p-4 backdrop-blur-sm">
-            <div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-2xl p-6 animate-pop shadow-2xl">
-                <div class="flex justify-between items-center mb-4"><h3 class="font-bold dark:text-white">Withdraw</h3><button onclick="closeModal('withdraw-modal')" class="dark:text-white">X</button></div>
-                <input type="number" id="w-amount" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-2 bg-gray-50 dark:bg-slate-800 dark:text-white outline-none focus:border-green-500" placeholder="Amount">
-                <input type="tel" id="w-number" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-2 bg-gray-50 dark:bg-slate-800 dark:text-white outline-none focus:border-green-500" placeholder="Account Number">
-                <select id="w-method" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-4 bg-white dark:bg-slate-800 dark:text-white"><option value="Easypaisa">Easypaisa</option></select>
-                <button onclick="submitWithdraw()" class="w-full bg-green-600 text-white font-bold py-3 rounded-xl shadow btn-anim">Request</button>
-            </div>
-        </div>
+        <!-- Join Match -->
+        <div id="join-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-3xl p-6 animate-pop"><h3 class="text-xl font-bold mb-4 dark:text-white">Join Match</h3><input id="join-ff-name" class="w-full p-3 bg-gray-50 rounded-xl mb-3" placeholder="Name"><input id="join-ff-uid" class="w-full p-3 bg-gray-50 rounded-xl mb-3" placeholder="UID"><div class="flex gap-2"><button onclick="closeModal('join-modal')" class="flex-1 py-3 bg-gray-200 rounded-xl">Cancel</button><button onclick="confirmJoin()" class="flex-1 py-3 bg-primary text-white rounded-xl shadow-lg">Join</button></div></div></div>
 
-        <!-- 6. REPORT HACKER (VIDEO UPLOAD) -->
-        <div id="hacker-modal" class="hidden fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
-            <div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-2xl p-6 border-2 border-red-500 animate-pop shadow-2xl">
-                <div class="flex justify-between items-center mb-4 border-b dark:border-gray-700 pb-3"><h3 class="text-lg font-bold text-red-600">Report Hacker</h3><button onclick="closeModal('hacker-modal')" class="text-gray-400">X</button></div>
-                <input type="text" id="h-uid" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-3 bg-gray-50 dark:bg-slate-800 dark:text-white outline-none focus:border-red-500" placeholder="Hacker UID">
-                <input type="tel" id="h-mobile" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-3 bg-gray-50 dark:bg-slate-800 dark:text-white outline-none focus:border-red-500" placeholder="Your Mobile">
-                <label class="text-xs text-gray-500 dark:text-gray-400 mb-1 block">Video Proof (Max 50MB)</label>
-                <input type="file" id="h-video" accept="video/*" class="w-full p-2 border dark:border-gray-600 rounded-xl mb-4 text-sm dark:text-gray-300">
-                <button id="btn-report" onclick="submitHackerReport()" class="w-full bg-red-600 text-white font-bold py-3 rounded-xl shadow btn-anim">Submit Report</button>
-            </div>
-        </div>
-
-        <!-- 7. HELP CENTER -->
-        <div id="help-modal" class="hidden fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
-            <div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-2xl p-6 animate-pop shadow-2xl">
-                <div class="flex justify-between items-center mb-4 border-b dark:border-gray-700 pb-3"><h3 class="text-lg font-bold text-blue-600">Help & Support</h3><button onclick="closeModal('help-modal')" class="text-gray-400">X</button></div>
-                <label class="text-xs text-gray-500 dark:text-gray-400 mb-1">Select Issue</label>
-                <select id="help-reason" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-3 bg-gray-50 dark:bg-slate-800 dark:text-white outline-none focus:border-blue-500">
-                    <option value="Feedback">Feedback</option>
-                    <option value="App Glitch">App Glitch</option>
-                    <option value="Money Not Received">Money Not Received</option>
-                    <option value="Login Issue">Account Logged Out / Login Help</option>
-                </select>
-                <input type="text" id="help-username" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-2 bg-gray-50 dark:bg-slate-800 dark:text-white outline-none focus:border-blue-500" placeholder="User Name">
-                <input type="tel" id="help-mobile" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-2 bg-gray-50 dark:bg-slate-800 dark:text-white outline-none focus:border-blue-500" placeholder="Mobile Number">
-                <input type="number" id="help-token" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-3 bg-gray-50 dark:bg-slate-800 dark:text-white outline-none focus:border-blue-500" placeholder="Enter Token / Amount (Optional)">
-                <textarea id="help-message" class="w-full p-3 border dark:border-gray-600 rounded-xl mb-4 bg-gray-50 dark:bg-slate-800 dark:text-white outline-none focus:border-blue-500 h-24" placeholder="Describe your issue..."></textarea>
-                <button onclick="submitHelp()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow btn-anim">Submit Request</button>
-            </div>
-        </div>
+        <!-- Room Details -->
+        <div id="room-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-3xl p-6 text-center animate-pop"><h3 class="text-xl font-bold mb-4 text-green-600">Room Info</h3><div class="bg-gray-100 p-4 rounded-xl mb-4"><p class="text-xs">ID</p><p id="d-room-id" class="text-2xl font-black select-all tracking-widest">--</p><hr class="my-2"><p class="text-xs">Pass</p><p id="d-room-pass" class="text-2xl font-black select-all tracking-widest">--</p></div><button onclick="closeModal('room-modal')" class="w-full py-3 bg-gray-800 text-white rounded-xl">Close</button></div></div>
+        
+        <!-- Giveaway Join -->
+        <div id="giveaway-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-3xl p-6 animate-pop"><h3 class="text-lg font-bold mb-2 dark:text-white">Join Giveaway</h3><input id="g-join-name" class="w-full p-3 bg-gray-50 rounded-xl mb-2" placeholder="Name"><input id="g-join-uid" class="w-full p-3 bg-gray-50 rounded-xl mb-2" placeholder="UID"><input id="g-join-mobile" class="w-full p-3 bg-gray-50 rounded-xl mb-4" placeholder="Mobile"><div class="flex gap-2"><button onclick="closeModal('giveaway-modal')" class="flex-1 py-3 bg-gray-200 rounded-xl">Cancel</button><button onclick="confirmGiveawayJoin()" class="flex-1 py-3 bg-purple-600 text-white rounded-xl shadow-lg">Join</button></div></div></div>
 
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT -->
     <script>
         const firebaseConfig = { apiKey: "AIzaSyAvaUTUkNN9o4P1EZS_xvTd6roP4rA3HBE", authDomain: "tournaments-77bf7.firebaseapp.com", databaseURL: "https://tournaments-77bf7-default-rtdb.firebaseio.com", projectId: "tournaments-77bf7", storageBucket: "tournaments-77bf7.firebasestorage.app", messagingSenderId: "739367246432", appId: "1:739367246432:web:f10ace2277b88a57970105" };
         firebase.initializeApp(firebaseConfig); const db = firebase.database(); const storage = firebase.storage();
-        const auth = firebase.auth();
-        auth.signInAnonymously().catch(error => console.error("Auth Error", error));
+        firebase.auth().signInAnonymously().catch(e=>console.error(e));
 
         let user = { uid: null, name: null, mobile: null, balance: 0 };
         let selectedMatchId = null; let selectedGiveawayId = null; let filterType = 'All'; let filterMode = 'All';
 
         function initApp() {
-            const theme = localStorage.getItem('theme');
-            if(theme === 'dark') { document.documentElement.classList.add('dark'); if(document.getElementById('theme-toggle')) document.getElementById('theme-toggle').checked = true; }
             const storedUid = localStorage.getItem('arena_uid');
             if (storedUid) {
-                user.uid = storedUid;
-                db.ref('users/' + storedUid).once('value', snap => {
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    setTimeout(() => { if(document.getElementById('theme-toggle')) document.getElementById('theme-toggle').checked = true; }, 100);
+                }
+                
+                db.ref('users/' + storedUid).on('value', snap => {
                     const data = snap.val();
-                    if (data) { user.name = data.name; user.mobile = data.mobile; user.balance = data.balance || 0; showApp(); } else { logout(); }
+                    if (data) {
+                        if(data.isBanned) {
+                            document.getElementById('banned-screen').classList.remove('hidden');
+                            document.getElementById('auth-screen').classList.add('hidden');
+                            document.getElementById('app-screens').classList.add('hidden');
+                            document.getElementById('bottom-nav').classList.add('hidden');
+                            document.getElementById('ban-reason-text').innerText = data.banReason || 'Violation';
+                        } else {
+                            document.getElementById('banned-screen').classList.add('hidden');
+                            user = {uid: storedUid, ...data};
+                            showApp();
+                        }
+                    } else { logout(); }
                 });
             }
         }
-        
+
         function handleLogin() {
             const name = document.getElementById('login-name').value.trim();
             const phone = document.getElementById('login-phone').value.trim();
-            if (!name || !phone) return alert("Please fill all fields");
-            const uid = phone.replace(/\D/g, ''); 
-            document.getElementById('btn-login').disabled = true; document.getElementById('btn-login').innerText = "Checking...";
-            user = { uid: uid, name: name, mobile: phone, balance: 0 };
-            db.ref('users/' + uid).update({ name: name, mobile: phone, lastLogin: firebase.database.ServerValue.TIMESTAMP }).then(() => { localStorage.setItem('arena_uid', uid); showApp(); });
+            const pass = document.getElementById('login-pass').value.trim();
+
+            if (!name || !phone || !pass) return alert("Fill all fields");
+            if (phone.length !== 11 || !phone.startsWith("03")) return alert("Invalid Mobile (03xxxxxxxxx)");
+
+            const uid = phone.replace(/\D/g, '');
+            const btn = document.getElementById('btn-login');
+            btn.disabled = true; btn.innerText = "Checking...";
+
+            db.ref('users/' + uid).once('value', snapshot => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    if(data.password === pass) {
+                        localStorage.setItem('arena_uid', uid);
+                        location.reload();
+                    } else {
+                        alert("❌ Incorrect Password!");
+                        btn.disabled = false; btn.innerText = "Login / Register";
+                    }
+                } else {
+                    db.ref('users').orderByChild('name').equalTo(name).once('value', nameSnap => {
+                        let taken = false;
+                        if(nameSnap.exists()) nameSnap.forEach(child => { if(child.key !== uid) taken = true; });
+                        
+                        if(taken) {
+                            alert("Name taken! Choose another.");
+                            btn.disabled = false; btn.innerText = "Login / Register";
+                        } else {
+                            db.ref('users/' + uid).update({ name, mobile: phone, password: pass, balance: 0, lastLogin: firebase.database.ServerValue.TIMESTAMP })
+                            .then(() => { localStorage.setItem('arena_uid', uid); location.reload(); });
+                        }
+                    });
+                }
+            });
         }
 
         function showApp() {
-            document.getElementById('auth-screen').classList.add('hidden'); 
-            document.getElementById('app-screens').classList.remove('hidden'); 
-            document.getElementById('bottom-nav').classList.remove('hidden'); 
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-screens').classList.remove('hidden');
+            document.getElementById('bottom-nav').classList.remove('hidden');
+            document.getElementById('profile-name').innerText = user.name;
+            document.getElementById('profile-phone').innerText = user.mobile;
+            document.getElementById('wallet-balance').innerText = user.balance || 0;
+            document.getElementById('header-balance').innerText = "₹" + (user.balance || 0);
             document.getElementById('header-balance').classList.remove('hidden');
-            document.getElementById('profile-name').innerText = user.name; document.getElementById('profile-phone').innerText = user.mobile;
-            document.getElementById('theme-toggle').checked = document.documentElement.classList.contains('dark');
-            document.getElementById('notif-toggle').checked = (localStorage.getItem('notif') === 'true');
-            updateBalanceDisplay(); listenToBalance(); loadMatches(); loadGiveaways();
+            loadMatches(); loadGiveaways();
         }
-        function logout() { localStorage.removeItem('arena_uid'); location.reload(); }
+
         function switchScreen(screen) {
-            ['home', 'wallet', 'profile'].forEach(s => { document.getElementById('screen-' + s).classList.add('hidden'); document.getElementById('nav-' + s).className = "flex flex-col items-center nav-inactive"; });
-            document.getElementById('screen-' + screen).classList.remove('hidden'); document.getElementById('nav-' + screen).className = "flex flex-col items-center nav-active";
+            ['home', 'wallet', 'profile'].forEach(s => {
+                document.getElementById('screen-' + s).classList.add('hidden');
+                document.getElementById('nav-' + s).classList.remove('active');
+            });
+            document.getElementById('screen-' + screen).classList.remove('hidden');
+            document.getElementById('nav-' + screen).classList.add('active');
             if(screen === 'wallet') loadHistory();
         }
-        function switchHomeTab(tab) {
-            document.getElementById('view-matches').classList.add('hidden'); document.getElementById('view-giveaways').classList.add('hidden');
-            document.getElementById('htab-matches').className = "flex-1 pb-1 font-bold tab-inactive"; document.getElementById('htab-giveaways').className = "flex-1 pb-1 font-bold tab-inactive";
-            document.getElementById('view-' + tab).classList.remove('hidden'); document.getElementById('htab-' + tab).className = "flex-1 pb-1 font-bold tab-active";
-            if(tab === 'matches') document.getElementById('matches-filters').classList.remove('hidden'); else document.getElementById('matches-filters').classList.add('hidden');
-        }
-        function setFilterType(type) { filterType = type; updateFilters(); loadMatches(); }
-        function setFilterMode(mode) { filterMode = mode; updateFilters(); loadMatches(); }
-        function updateFilters() {
-            ['All','CS','BR'].forEach(t => document.getElementById('btn-type-'+t).className = (t===filterType) ? "filter-type-active pb-1 transition" : "hover:text-blue-500 pb-1 transition");
-            ['All','Squad','Duo','Solo'].forEach(m => document.getElementById('btn-mode-'+m).className = (m===filterMode) ? "filter-mode-active px-4 py-1.5 rounded-full text-xs font-bold transition shadow-sm btn-anim" : "filter-mode-inactive px-4 py-1.5 rounded-full text-xs font-bold transition btn-anim");
-        }
-        function loadMatches() { db.ref('tournaments').on('value', snap => { const list = document.getElementById('tournament-list'); list.innerHTML = ''; const data = snap.val(); if (!data) { list.innerHTML = "<p class='text-center text-gray-400 pt-10'>No matches available</p>"; return; } Object.keys(data).reverse().forEach(key => { const t = data[key]; let typeMatch = (filterType === 'All') || (filterType === 'CS' && t.gameMode.includes('CS')) || (filterType === 'BR' && t.gameMode.includes('BR')); let modeMatch = (filterMode === 'All') || t.gameMode.includes(filterMode.toUpperCase()); if(!typeMatch || !modeMatch) return; const isJoined = t.participants && t.participants[user.uid]; const count = t.participants ? Object.keys(t.participants).length : 0; let actionBtn = isJoined ? `<button onclick="showRoom('${key}')" class="bg-green-600 text-white w-full py-2 rounded-lg font-bold text-sm shadow">Joined (View Room)</button>` : (!t.isJoinable ? `<button disabled class="bg-gray-300 text-gray-500 w-full py-2 rounded-lg font-bold text-sm">Closed</button>` : (count >= t.maxSlots ? `<button disabled class="bg-red-100 text-red-500 w-full py-2 rounded-lg font-bold text-sm">Full</button>` : `<button onclick="openJoinModal('${key}', ${t.fee})" class="bg-blue-600 text-white w-full py-2 rounded-lg font-bold text-sm shadow btn-anim">Join - ₹${t.fee}</button>`)); list.innerHTML += `<div class="bg-white dark:bg-darkCard rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden animate-slide-up hover:shadow-md transition"><div class="flex justify-between items-start mb-2"><div><span class="bg-blue-100 text-blue-600 px-2 py-0.5 rounded text-[10px] font-bold mb-1 inline-block">${t.gameMode}</span><h3 class="font-bold text-gray-800 dark:text-white text-lg leading-tight">${t.title}</h3><p class="text-xs text-gray-400 mt-1">${new Date(t.date).toLocaleString()}</p></div></div><div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-2 mb-3 border dark:border-gray-700"><p class="text-[10px] text-center text-gray-500 mb-1 uppercase tracking-widest font-bold">Prize Pool</p><div class="flex justify-between items-center text-center"><div class="flex-1"><p class="text-[10px] text-gray-400">1st</p><p class="font-bold text-green-600 text-sm">₹${t.p1||0}</p></div><div class="flex-1 border-l border-gray-200 dark:border-gray-600"><p class="text-[10px] text-gray-400">2nd</p><p class="font-bold text-blue-500 text-sm">₹${t.p2||0}</p></div><div class="flex-1 border-l border-gray-200 dark:border-gray-600"><p class="text-[10px] text-gray-400">3rd</p><p class="font-bold text-orange-500 text-sm">₹${t.p3||0}</p></div></div></div><div class="flex justify-between items-center mb-4 px-1"><div class="text-xs text-gray-500">Slots: <b class="text-gray-800 dark:text-white">${count}/${t.maxSlots}</b></div><div class="text-xs text-gray-500">Entry: <b class="text-blue-600 text-sm">₹${t.fee}</b></div></div>${actionBtn}</div>`; }); }); }
-        function loadGiveaways() { db.ref('giveaways').on('value', snap => { const list = document.getElementById('giveaway-list'); list.innerHTML = ''; const data = snap.val(); if (!data) { list.innerHTML = "<p class='text-center text-gray-400 pt-10'>No Active Giveaways</p>"; return; } Object.keys(data).reverse().forEach(key => { const g = data[key]; const isJoined = g.participants && g.participants[user.uid]; const count = g.participants ? Object.keys(g.participants).length : 0; let btn = isJoined ? `<button disabled class="w-full bg-green-100 text-green-700 font-bold py-2 rounded-lg">Joined</button>` : (count >= g.maxSlots ? `<button disabled class="w-full bg-gray-200 text-gray-500 font-bold py-2 rounded-lg">Full</button>` : `<button onclick="openGiveawayJoinModal('${key}')" class="w-full bg-purple-600 text-white font-bold py-2 rounded-lg shadow btn-anim">Free Join</button>`); list.innerHTML += `<div class="bg-white dark:bg-darkCard rounded-xl p-4 shadow-sm border border-purple-100 dark:border-purple-900 animate-slide-up"><div class="flex justify-between items-center mb-2"><h3 class="font-bold text-purple-700">${g.title}</h3><span class="text-[10px] bg-purple-50 text-purple-600 px-2 py-1 rounded">Free</span></div><p class="text-xs text-gray-500 mb-3">Draw: ${new Date(g.date).toLocaleString()}</p><div class="grid grid-cols-3 gap-1 text-center text-xs mb-3 bg-gray-50 dark:bg-slate-800 p-2 rounded"><div><b class="text-green-600">🥇 ${g.p1||0}</b></div><div><b class="text-blue-600">🥈 ${g.p2||0}</b></div><div><b class="text-orange-600">🥉 ${g.p3||0}</b></div></div>${btn}<p class="text-[10px] text-center text-gray-400 mt-2">${count} Players Joined</p></div>`; }); }); }
-        function openGiveawayJoinModal(gid) { selectedGiveawayId = gid; document.getElementById('g-join-name').value = ''; document.getElementById('g-join-uid').value = ''; document.getElementById('g-join-mobile').value = user.mobile; document.getElementById('giveaway-modal').classList.remove('hidden'); }
-        function confirmGiveawayJoin() { const name = document.getElementById('g-join-name').value; const uid = document.getElementById('g-join-uid').value; const mob = document.getElementById('g-join-mobile').value; if(!name || !uid || !mob) return alert("Fill all details to join!"); db.ref(`giveaways/${selectedGiveawayId}/participants/${user.uid}`).set({ ffName: name, ffUid: uid, mobile: mob, joinedAt: firebase.database.ServerValue.TIMESTAMP }).then(() => { closeModal('giveaway-modal'); alert("🎉 Joined Giveaway Successfully!"); }); }
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-        function openJoinModal(mid, fee) { if (user.balance < fee) return alert("Insufficient Balance!"); selectedMatchId = mid; document.getElementById('join-ff-name').value = ''; document.getElementById('join-ff-uid').value = ''; openModal('join-modal'); }
-        function confirmJoin() { const ffName = document.getElementById('join-ff-name').value; const ffUid = document.getElementById('join-ff-uid').value; if(!ffName || !ffUid) return alert("Enter Details"); db.ref(`tournaments/${selectedMatchId}`).once('value', snap => { const t = snap.val(); if(t.participants && Object.keys(t.participants).length >= t.maxSlots) return alert("Match Full"); const updates = {}; updates[`users/${user.uid}/balance`] = user.balance - t.fee; updates[`tournaments/${selectedMatchId}/participants/${user.uid}`] = { ffName: ffName, ffUid: ffUid, mobile: user.mobile }; db.ref().update(updates).then(() => { closeModal('join-modal'); alert("Joined!"); }); }); }
-        function showRoom(mid) { db.ref(`tournaments/${mid}`).once('value', s => { const t = s.val(); document.getElementById('d-room-id').innerText = t.roomId || "Wait"; document.getElementById('d-room-pass').innerText = t.roomPass || "Wait"; openModal('room-modal'); }); }
-        function listenToBalance() { db.ref(`users/${user.uid}/balance`).on('value', s => { user.balance = s.val() || 0; updateBalanceDisplay(); }); }
-        function updateBalanceDisplay() { document.getElementById('header-balance').innerText = "₹" + user.balance; document.getElementById('wallet-balance').innerText = "₹" + user.balance; }
 
-        // --- DEPOSIT WITH BASE64 (NO STORAGE) ---
+        function switchHomeTab(tab) {
+            document.getElementById('view-matches').classList.add('hidden');
+            document.getElementById('view-giveaways').classList.add('hidden');
+            document.getElementById('htab-matches').className = "flex-1 py-2 rounded-lg text-sm font-bold text-gray-500 hover:text-gray-700 transition-all";
+            document.getElementById('htab-giveaways').className = "flex-1 py-2 rounded-lg text-sm font-bold text-gray-500 hover:text-gray-700 transition-all";
+            
+            document.getElementById('view-' + tab).classList.remove('hidden');
+            document.getElementById('htab-' + tab).className = "flex-1 py-2 rounded-lg text-sm font-bold bg-white dark:bg-slate-600 shadow-sm text-primary transition-all";
+            
+            document.getElementById('matches-filters').style.display = tab === 'matches' ? 'block' : 'none';
+        }
+
+        function setFilterType(t){filterType=t;updateFilters();loadMatches();} function setFilterMode(m){filterMode=m;updateFilters();loadMatches();} 
+        function updateFilters(){ ['All','CS','BR'].forEach(t=>document.getElementById('btn-type-'+t).className=t===filterType?"filter-type-active text-sm font-bold pb-1 transition":"text-sm font-bold text-gray-400 hover:text-primary pb-1 transition"); ['All','Squad','Duo','Solo'].forEach(m=>document.getElementById('btn-mode-'+m).className=m===filterMode?"filter-mode-active px-4 py-1.5 rounded-full text-xs font-bold shadow-md btn-press transition":"filter-mode-inactive px-4 py-1.5 rounded-full text-xs font-bold shadow-sm btn-press transition"); }
+
+        function loadMatches(){ db.ref('tournaments').on('value', s=>{ const d=s.val(); const l=document.getElementById('tournament-list'); l.innerHTML=''; if(d)Object.keys(d).reverse().forEach(k=>{ const t=d[k];
+            let typeMatch = (filterType === 'All') || (filterType === 'CS' && t.gameMode.includes('CS')) || (filterType === 'BR' && t.gameMode.includes('BR'));
+            let modeMatch = (filterMode === 'All') || t.gameMode.includes(filterMode.toUpperCase());
+            if(!typeMatch || !modeMatch) return;
+
+            const joined=t.participants&&t.participants[user.uid]; 
+            const count = t.participants ? Object.keys(t.participants).length : 0;
+            const percent = Math.min(100, count / t.maxSlots * 100);
+            
+            // Logic for Buttons (Closed/Full/Joined/Join)
+            let actionBtn = '';
+            if(joined) {
+                actionBtn = `<button onclick="showRoom('${k}')" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-md btn-press transition">View Room Details</button>`;
+            } else if(t.isJoinable === false) { // Explicitly Closed by Admin
+                actionBtn = `<button disabled class="w-full bg-gray-400 text-white font-bold py-3 rounded-xl cursor-not-allowed">Match Closed</button>`;
+            } else if(count >= t.maxSlots) { // Full
+                actionBtn = `<button disabled class="w-full bg-red-400 text-white font-bold py-3 rounded-xl cursor-not-allowed">Match Full</button>`;
+            } else { // Open
+                actionBtn = `<button onclick="openJoinModal('${k}',${t.fee})" class="w-full bg-primary hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-md btn-press transition">Join Match Now</button>`;
+            }
+
+            l.innerHTML+=`
+            <div class="bg-white dark:bg-darkCard p-4 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 relative overflow-hidden animate-card group hover:scale-[1.02] transition-transform">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <span class="px-2 py-1 bg-indigo-100 text-indigo-700 text-[10px] font-bold rounded-md uppercase tracking-wide">${t.gameMode}</span>
+                        <h3 class="font-black text-lg text-gray-800 dark:text-white mt-1 leading-tight">${t.title}</h3>
+                        <p class="text-xs text-gray-500 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>${new Date(t.date).toLocaleString()}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-400">Entry</p>
+                        <p class="text-xl font-black text-indigo-600 dark:text-indigo-400">₹${t.fee}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 mb-4">
+                    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 p-2 rounded-xl text-center"><p class="text-[10px] text-yellow-600 font-bold uppercase">1st Prize</p><p class="font-bold text-gray-800 dark:text-white">₹${t.p1}</p></div>
+                    <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 p-2 rounded-xl text-center"><p class="text-[10px] text-gray-500 font-bold uppercase">2nd</p><p class="font-bold text-gray-800 dark:text-white">₹${t.p2}</p></div>
+                    <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 p-2 rounded-xl text-center"><p class="text-[10px] text-orange-600 font-bold uppercase">3rd</p><p class="font-bold text-gray-800 dark:text-white">₹${t.p3}</p></div>
+                </div>
+                <div class="mb-4">
+                    <div class="flex justify-between text-xs mb-1"><span class="text-gray-500 font-bold">Joined: ${count}/${t.maxSlots}</span><span class="text-green-500 font-bold">${Math.round(percent)}% Full</span></div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 overflow-hidden"><div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-2.5 rounded-full transition-all duration-1000" style="width: ${percent}%"></div></div>
+                </div>
+                ${actionBtn}
+            </div>`}); }); }
+        
+        function loadGiveaways(){ db.ref('giveaways').on('value', s=>{ const d=s.val(); const l=document.getElementById('giveaway-list'); l.innerHTML=''; if(d)Object.keys(d).reverse().forEach(k=>{ const g=d[k]; const joined=g.participants&&g.participants[user.uid]; 
+            l.innerHTML+=`<div class="bg-white dark:bg-darkCard p-5 rounded-2xl shadow-lg border border-purple-100 dark:border-purple-900 animate-card"><div class="flex justify-between items-center mb-2"><h3 class="text-lg font-black text-purple-600">${g.title}</h3><span class="text-[10px] bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-bold">FREE ENTRY</span></div><p class="text-xs text-gray-500 mb-4"><i class="fa-regular fa-calendar mr-1"></i>Draw: ${new Date(g.date).toLocaleString()}</p><div class="grid grid-cols-3 gap-2 text-center text-xs mb-4"><div class="bg-gray-50 dark:bg-slate-800 p-2 rounded-lg">🥇 <br><b>${g.p1}</b></div><div class="bg-gray-50 dark:bg-slate-800 p-2 rounded-lg">🥈 <br><b>${g.p2}</b></div><div class="bg-gray-50 dark:bg-slate-800 p-2 rounded-lg">🥉 <br><b>${g.p3}</b></div></div>${joined?`<button disabled class="w-full bg-green-100 text-green-700 font-bold py-3 rounded-xl border border-green-200">✅ Already Joined</button>`:`<button onclick="openGiveawayJoinModal('${k}')" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg btn-press">Join For Free</button>`}</div>` }); }); }
+
         function submitDeposit() {
             const amt = document.getElementById('pay-amount').value;
             const senderNum = document.getElementById('pay-sender-num').value;
-            const fileInput = document.getElementById('pay-proof');
-            const file = fileInput.files[0];
-
-            if(!amt || !senderNum || !file) return alert("⚠️ Please fill Amount, Sender Number & Upload Proof");
-            if(file.size > 500 * 1024) return alert("⚠️ File too large! Max 500KB.");
+            const file = document.getElementById('pay-proof').files[0];
+            if(!amt || !senderNum || !file) return alert("Fill all fields");
+            if(file.size > 500*1024) return alert("File too large (Max 500KB)");
 
             const btn = document.getElementById('btn-submit-pay');
             btn.disabled = true; btn.innerText = "Processing...";
 
             const reader = new FileReader();
             reader.readAsDataURL(file);
-            reader.onload = function(event) {
-                const img = new Image();
-                img.src = event.target.result;
+            reader.onload = function(e) {
+                const img = new Image(); img.src = e.target.result;
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 500; 
-                    const scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
-                    canvas.height = img.height * scaleSize;
                     const ctx = canvas.getContext('2d');
+                    canvas.width = 500; canvas.height = img.height * (500/img.width);
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.5); 
-
+                    
                     db.ref('payment_requests').push({
-                        userId: user.uid, userName: user.name, userMobile: user.mobile, 
-                        senderMobile: senderNum, amount: Number(amt), 
-                        proof: dataUrl, status: 'pending', date: firebase.database.ServerValue.TIMESTAMP
+                        userId: user.uid, userName: user.name, userMobile: user.mobile,
+                        senderMobile: senderNum, amount: Number(amt),
+                        proof: canvas.toDataURL('image/jpeg', 0.5),
+                        status: 'pending', date: firebase.database.ServerValue.TIMESTAMP
                     }).then(() => {
-                        alert("✅ Request Sent!"); closeModal('payment-modal');
-                        document.getElementById('pay-amount').value = '';
-                        document.getElementById('pay-sender-num').value = '';
-                        fileInput.value = '';
-                    }).catch(error => alert("Error: " + error.message))
-                    .finally(() => { btn.disabled = false; btn.innerText = "Submit Request"; });
+                        alert("Request Sent!"); closeModal('payment-modal');
+                        btn.disabled = false; btn.innerText = "Submit Request";
+                    });
                 }
-            };
+            }
         }
-
-        function submitWithdraw() { const amt = Number(document.getElementById('w-amount').value); const num = document.getElementById('w-number').value; const method = document.getElementById('w-method').value; if(!amt || !num || amt > user.balance) return alert("Invalid"); const updates = {}; const reqKey = db.ref('withdraw_requests').push().key; updates[`withdraw_requests/${reqKey}`] = { userId: user.uid, name: user.name, mobile: num, amount: amt, method: method, status: 'pending', date: firebase.database.ServerValue.TIMESTAMP }; updates[`users/${user.uid}/balance`] = user.balance - amt; db.ref().update(updates).then(() => { closeModal('withdraw-modal'); alert("Requested"); }); }
-        function loadHistory() { document.getElementById('payment-history').innerHTML = '<p class="text-center mt-4">Check Admins Response for updates</p>'; }
-        function toggleTheme() { if(document.documentElement.classList.contains('dark')) { document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); } else { document.documentElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); } }
-        function toggleNotifications() { const status = document.getElementById('notif-toggle').checked; localStorage.setItem('notif', status); alert(status ? "Notifications On" : "Notifications Off"); }
         
-        // --- HACKER REPORT ---
         function submitHackerReport() { 
-            const uid = document.getElementById('h-uid').value; 
-            const mob = document.getElementById('h-mobile').value; 
-            const file = document.getElementById('h-video').files[0]; 
+            const uid = document.getElementById('h-uid').value; const mob = document.getElementById('h-mobile').value; const file = document.getElementById('h-video').files[0]; 
             if(!uid || !mob || !file) return alert("All fields required");
-            
-            const btn = document.getElementById('btn-report');
-            btn.disabled = true; btn.innerText = "Uploading...";
-
+            const btn = document.getElementById('btn-report'); btn.disabled = true; btn.innerText = "Uploading...";
             const ref = storage.ref(`reports/${Date.now()}_${uid}`); 
             const task = ref.put(file);
             task.on('state_changed', 
                 (snap) => { btn.innerText = "Uploading " + Math.floor((snap.bytesTransferred / snap.totalBytes) * 100) + "%"; },
-                (err) => { alert("Upload Failed"); btn.disabled = false; btn.innerText = "Submit Report"; },
+                (err) => { alert("Upload Failed (Check Rules)"); btn.disabled = false; btn.innerText = "Submit Report"; },
                 () => { task.snapshot.ref.getDownloadURL().then(url => { db.ref('hacker_reports').push({ hackerUid: uid, reporterMobile: mob, video: url, date: firebase.database.ServerValue.TIMESTAMP }).then(() => { closeModal('hacker-modal'); alert("Report Submitted"); btn.disabled = false; btn.innerText = "Submit Report"; }); }); }
             );
         }
 
-        // --- HELP CENTER ---
-        function openHelpModal() { document.getElementById('help-username').value = user.name || ''; document.getElementById('help-mobile').value = user.mobile || ''; openModal('help-modal'); }
-        function submitHelp() {
-            const reason = document.getElementById('help-reason').value;
-            const name = document.getElementById('help-username').value;
-            const mobile = document.getElementById('help-mobile').value;
-            const token = document.getElementById('help-token').value; 
-            const message = document.getElementById('help-message').value;
-            if(!name || !mobile || !message) return alert("Please fill Name, Mobile & Message");
-            db.ref('help_requests').push({ reason: reason, userName: name, mobile: mobile, tokenOrAmount: token || "N/A", message: message, submittedByUid: user.uid || "Guest", date: firebase.database.ServerValue.TIMESTAMP }).then(() => { closeModal('help-modal'); alert("Help Request Submitted!"); document.getElementById('help-message').value = ''; });
-        }
+        // Utils
+        function openHelpModal(){document.getElementById('help-username').value=user.name;document.getElementById('help-mobile').value=user.mobile;openModal('help-modal');}
+        function submitHelp(){const r=document.getElementById('help-reason').value;const m=document.getElementById('help-message').value;db.ref('help_requests').push({reason:r,message:m,userName:document.getElementById('help-username').value,mobile:document.getElementById('help-mobile').value,token:document.getElementById('help-token').value}).then(()=>{closeModal('help-modal');alert("Sent!");});}
+        function submitWithdraw(){const a=Number(document.getElementById('w-amount').value);const n=document.getElementById('w-number').value;if(a>user.balance)return alert("Low Balance");db.ref().update({[`withdraw_requests/${db.ref().push().key}`]:{userId:user.uid,amount:a,mobile:n,status:'pending'},[`users/${user.uid}/balance`]:user.balance-a}).then(()=>{closeModal('withdraw-modal');alert("Requested");});}
 
+        function openModal(id){document.getElementById(id).classList.remove('hidden');}
+        function closeModal(id){document.getElementById(id).classList.add('hidden');}
+        function logout(){localStorage.removeItem('arena_uid'); location.reload();}
+        function toggleTheme(){if(document.documentElement.classList.contains('dark')){document.documentElement.classList.remove('dark');localStorage.setItem('theme','light');}else{document.documentElement.classList.add('dark');localStorage.setItem('theme','dark');}}
+        function toggleNotifications(){alert("Toggled");}
+        function loadHistory(){document.getElementById('payment-history').innerHTML="Loading...";}
+
+        // Match Functions
+        function openJoinModal(k,f){if(user.balance<f)return alert("Low Balance");selectedMatchId=k;openModal('join-modal');}
+        function confirmJoin(){const n=document.getElementById('join-ff-name').value;const u=document.getElementById('join-ff-uid').value;if(!n||!u)return;db.ref(`tournaments/${selectedMatchId}`).once('value',s=>{const t=s.val();db.ref().update({[`users/${user.uid}/balance`]:user.balance-t.fee,[`tournaments/${selectedMatchId}/participants/${user.uid}`]:{ffName:n,ffUid:u,mobile:user.mobile}}).then(()=>{closeModal('join-modal');alert("Joined!");})});}
+        function showRoom(k){db.ref(`tournaments/${k}`).once('value',s=>{const t=s.val();document.getElementById('d-room-id').innerText=t.roomId||"Wait";document.getElementById('d-room-pass').innerText=t.roomPass||"Wait";openModal('room-modal');});}
+        function openGiveawayJoinModal(k){selectedGiveawayId=k;openModal('giveaway-modal');}
+        function confirmGiveawayJoin(){const n=document.getElementById('g-join-name').value;const u=document.getElementById('g-join-uid').value;const m=document.getElementById('g-join-mobile').value;db.ref(`giveaways/${selectedGiveawayId}/participants/${user.uid}`).set({ffName:n,ffUid:u,mobile:m,joinedAt:firebase.database.ServerValue.TIMESTAMP}).then(()=>{closeModal('giveaway-modal');alert("Joined!");});}
+
+        switchHomeTab('matches');
         initApp();
     </script>
 </body>
