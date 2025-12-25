@@ -35,16 +35,11 @@
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .btn-press:active { transform: scale(0.95); transition: transform 0.1s; }
-        
         .nav-item.active { color: #4f46e5; transform: translateY(-4px); }
-        .nav-item { color: #94a3b8; transition: all 0.3s ease; }
-        
         .filter-mode-active { background-color: #4f46e5; color: white; }
         .filter-mode-inactive { background-color: white; color: #6b7280; }
         .dark .filter-mode-inactive { background-color: #334155; color: #94a3b8; }
-        
         .filter-type-active { color: #4f46e5; border-bottom: 2px solid #4f46e5; font-weight: bold; }
-        
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-slide-up { animation: slideUp 0.4s ease-out forwards; }
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
@@ -103,7 +98,6 @@
 
         <!-- APP CONTENT -->
         <div id="app-screens" class="hidden p-4">
-            
             <!-- HOME -->
             <div id="screen-home" class="animate-slide-up">
                 <!-- Filters -->
@@ -139,7 +133,7 @@
                     <div class="flex gap-2 justify-center">
                         <button onclick="openModal('payment-modal')" class="flex-1 bg-white text-primary py-3 rounded-xl font-bold shadow-lg btn-press flex flex-col items-center justify-center"><i class="fa-solid fa-plus mb-1"></i>Add</button>
                         <button onclick="openModal('transfer-modal')" class="flex-1 bg-white text-purple-600 py-3 rounded-xl font-bold shadow-lg btn-press flex flex-col items-center justify-center"><i class="fa-solid fa-paper-plane mb-1"></i>Send</button>
-                        <button onclick="openModal('withdraw-modal')" class="flex-1 bg-black/20 border border-white/20 text-white py-3 rounded-xl font-bold btn-press flex flex-col items-center justify-center"><i class="fa-solid fa-arrow-up mb-1"></i>Withdraw</button>
+                        <button onclick="openModal('withdraw-modal')" class="flex-1 bg-black/20 border border-white/20 text-white py-3 rounded-xl font-bold btn-press flex flex-col items-center justify-center"><i class="fa-solid fa-arrow-up mb-1"></i>Out</button>
                     </div>
                 </div>
                 <h3 class="font-bold text-gray-700 dark:text-gray-300 mb-3 px-2">History</h3>
@@ -178,31 +172,8 @@
         </div>
 
         <!-- MODALS -->
-        
         <!-- SEND TOKEN -->
-        <div id="transfer-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end sm:items-center justify-center p-4 backdrop-blur-sm animate-pop">
-            <div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-[30px] p-6 shadow-2xl">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-bold dark:text-white text-purple-600">Send Money</h3>
-                    <button onclick="closeModal('transfer-modal')" class="bg-gray-100 dark:bg-slate-700 w-8 h-8 rounded-full flex items-center justify-center font-bold">✕</button>
-                </div>
-                <div class="space-y-4">
-                    <div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-gray-600">
-                        <label class="text-xs text-gray-500 font-bold ml-1 uppercase">Friend's Username</label>
-                        <input type="text" id="tf-username" class="w-full bg-transparent border-none outline-none font-bold text-lg dark:text-white" placeholder="Enter Friend's Name">
-                    </div>
-                    <div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-gray-600">
-                        <label class="text-xs text-gray-500 font-bold ml-1 uppercase">Amount</label>
-                        <input type="number" id="tf-amount" class="w-full bg-transparent border-none outline-none font-bold text-lg dark:text-white" placeholder="₹ 0">
-                    </div>
-                    <div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-gray-600">
-                        <label class="text-xs text-gray-500 font-bold ml-1 uppercase">Note (Optional)</label>
-                        <input type="text" id="tf-note" class="w-full bg-transparent border-none outline-none text-sm dark:text-white" placeholder="Gift / Deal...">
-                    </div>
-                </div>
-                <button onclick="submitTransfer()" class="w-full bg-purple-600 text-white font-bold py-4 rounded-xl shadow-lg mt-6 btn-press">Transfer Now</button>
-            </div>
-        </div>
+        <div id="transfer-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end sm:items-center justify-center p-4 backdrop-blur-sm animate-pop"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-[30px] p-6 shadow-2xl"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold dark:text-white text-purple-600">Send Money</h3><button onclick="closeModal('transfer-modal')" class="bg-gray-100 dark:bg-slate-700 w-8 h-8 rounded-full flex items-center justify-center font-bold">✕</button></div><div class="space-y-4"><div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-gray-600"><label class="text-xs text-gray-500 font-bold ml-1 uppercase">Friend's Username</label><input type="text" id="tf-username" class="w-full bg-transparent border-none outline-none font-bold text-lg dark:text-white" placeholder="Enter Friend's Name"></div><div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-gray-600"><label class="text-xs text-gray-500 font-bold ml-1 uppercase">Amount</label><input type="number" id="tf-amount" class="w-full bg-transparent border-none outline-none font-bold text-lg dark:text-white" placeholder="₹ 0"></div><div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-gray-600"><label class="text-xs text-gray-500 font-bold ml-1 uppercase">Note</label><input type="text" id="tf-note" class="w-full bg-transparent border-none outline-none text-sm dark:text-white" placeholder="Gift / Deal..."></div></div><button onclick="submitTransfer()" class="w-full bg-purple-600 text-white font-bold py-4 rounded-xl shadow-lg mt-6 btn-press">Transfer Now</button></div></div>
 
         <!-- Add Money -->
         <div id="payment-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end sm:items-center justify-center p-4 backdrop-blur-sm"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-3xl p-6 animate-pop shadow-2xl"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold dark:text-white">Add Money</h3><button onclick="closeModal('payment-modal')" class="bg-gray-100 dark:bg-slate-700 w-8 h-8 rounded-full flex items-center justify-center font-bold">✕</button></div><div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-4 rounded-xl mb-4 text-center"><p class="text-xs font-bold text-green-600 uppercase">Easypaisa</p><p class="text-2xl font-black text-gray-800 dark:text-white mt-1 select-all">0318 1068861</p></div><div class="space-y-3"><input type="number" id="pay-amount" class="w-full p-3 bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-600 outline-none" placeholder="Amount Sent"><input type="tel" id="pay-sender-num" class="w-full p-3 bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-600 outline-none" placeholder="Sender Account Number"><div class="relative"><p class="text-xs text-gray-500 mb-1 ml-1">Screenshot Proof</p><input type="file" id="pay-proof" accept="image/*" class="w-full p-2 bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-200 text-sm"></div></div><button id="btn-submit-pay" onclick="submitDeposit()" class="w-full bg-green-600 text-white font-bold py-3.5 rounded-xl shadow-lg mt-6 btn-press">Submit Request</button></div></div>
@@ -210,7 +181,7 @@
         <!-- Withdraw -->
         <div id="withdraw-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end sm:items-center justify-center p-4 backdrop-blur-sm"><div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-3xl p-6 animate-pop shadow-2xl"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold dark:text-white">Withdraw</h3><button onclick="closeModal('withdraw-modal')" class="bg-gray-100 w-8 h-8 rounded-full">✕</button></div><div class="space-y-3"><input type="number" id="w-amount" class="w-full p-3 bg-gray-50 rounded-xl border outline-none" placeholder="Amount"><input type="tel" id="w-number" class="w-full p-3 bg-gray-50 rounded-xl border outline-none" placeholder="Account Number"><select id="w-method" class="w-full p-3 bg-gray-50 rounded-xl border outline-none"><option>Easypaisa</option></select></div><button onclick="submitWithdraw()" class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl shadow-lg mt-6 btn-press">Request Withdraw</button></div></div>
 
-        <!-- DYNAMIC JOIN MODAL -->
+        <!-- DYNAMIC JOIN MODAL (MATCHES) -->
         <div id="join-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end sm:items-center justify-center p-4 backdrop-blur-sm">
             <div class="bg-white dark:bg-darkCard w-full max-w-sm rounded-[30px] p-6 animate-pop shadow-2xl">
                 <h3 class="text-xl font-bold mb-1 dark:text-white">Join Match</h3>
@@ -276,7 +247,6 @@
             const name = document.getElementById('login-name').value.trim();
             const phone = document.getElementById('login-phone').value.trim();
             const pass = document.getElementById('login-pass').value.trim();
-
             if (!name || !phone || !pass) return alert("Fill all fields");
             if (phone.length !== 11 || !phone.startsWith("03")) return alert("Invalid Mobile (03xxxxxxxxx)");
 
@@ -310,88 +280,32 @@
                 }
             });
         }
-
-        function showApp() {
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('app-screens').classList.remove('hidden');
-            document.getElementById('bottom-nav').classList.remove('hidden');
-            document.getElementById('profile-name').innerText = user.name;
-            document.getElementById('profile-phone').innerText = user.mobile;
-            document.getElementById('wallet-balance').innerText = user.balance || 0;
-            document.getElementById('header-balance').innerText = "₹" + (user.balance || 0);
-            document.getElementById('header-balance').classList.remove('hidden');
-            loadMatches(); loadGiveaways();
-        }
-
-        function switchScreen(screen) {
-            ['home', 'wallet', 'profile'].forEach(s => {
-                document.getElementById('screen-' + s).classList.add('hidden');
-                document.getElementById('nav-' + s).classList.remove('active');
-            });
-            document.getElementById('screen-' + screen).classList.remove('hidden');
-            document.getElementById('nav-' + screen).classList.add('active');
-            if(screen === 'wallet') loadHistory();
-        }
-
-        function switchHomeTab(tab) {
-            document.getElementById('view-matches').classList.add('hidden');
-            document.getElementById('view-giveaways').classList.add('hidden');
-            document.getElementById('htab-matches').className = "flex-1 py-2 rounded-lg text-sm font-bold text-gray-500 hover:text-gray-700 transition-all";
-            document.getElementById('htab-giveaways').className = "flex-1 py-2 rounded-lg text-sm font-bold text-gray-500 hover:text-gray-700 transition-all";
-            
-            document.getElementById('view-' + tab).classList.remove('hidden');
-            
-            if (tab === 'matches') {
-                document.getElementById('htab-matches').className = "flex-1 py-2 rounded-lg text-sm font-bold bg-white dark:bg-slate-600 shadow-sm text-primary transition-all";
-                document.getElementById('matches-filters').style.display = 'block';
-            } else {
-                document.getElementById('htab-giveaways').className = "flex-1 py-2 rounded-lg text-sm font-bold bg-white dark:bg-slate-600 shadow-sm text-primary transition-all";
-                document.getElementById('matches-filters').style.display = 'none';
-            }
-        }
-
+        function showApp() { document.getElementById('auth-screen').classList.add('hidden'); document.getElementById('app-screens').classList.remove('hidden'); document.getElementById('bottom-nav').classList.remove('hidden'); document.getElementById('profile-name').innerText = user.name; document.getElementById('profile-phone').innerText = user.mobile; document.getElementById('wallet-balance').innerText = user.balance || 0; document.getElementById('header-balance').innerText = "₹" + (user.balance || 0); document.getElementById('header-balance').classList.remove('hidden'); loadMatches(); loadGiveaways(); }
+        function switchScreen(s){ ['home','wallet','profile'].forEach(i=>{document.getElementById('screen-'+i).classList.add('hidden');document.getElementById('nav-'+i).classList.remove('active');}); document.getElementById('screen-'+s).classList.remove('hidden'); document.getElementById('nav-'+s).classList.add('active'); if(s==='wallet')loadHistory(); }
+        function switchHomeTab(t){ document.getElementById('view-matches').classList.add('hidden'); document.getElementById('view-giveaways').classList.add('hidden'); document.getElementById('htab-matches').className="flex-1 py-2 rounded-lg text-sm font-bold text-gray-500 hover:text-gray-700 transition-all"; document.getElementById('htab-giveaways').className="flex-1 py-2 rounded-lg text-sm font-bold text-gray-500 hover:text-gray-700 transition-all"; document.getElementById('view-'+t).classList.remove('hidden'); if (t === 'matches') { document.getElementById('htab-matches').className="flex-1 py-2 rounded-lg text-sm font-bold bg-white dark:bg-slate-600 shadow-sm text-primary transition-all"; document.getElementById('matches-filters').style.display = 'block'; } else { document.getElementById('htab-giveaways').className="flex-1 py-2 rounded-lg text-sm font-bold bg-white dark:bg-slate-600 shadow-sm text-primary transition-all"; document.getElementById('matches-filters').style.display = 'none'; } }
         function setFilterType(t){filterType=t;updateFilters();loadMatches();loadGiveaways();} function setFilterMode(m){filterMode=m;updateFilters();loadMatches();loadGiveaways();} 
         function updateFilters(){ ['All','CS','BR'].forEach(t=>document.getElementById('btn-type-'+t).className=t===filterType?"text-primary border-b-2 border-primary font-bold text-sm pb-1 transition":"text-gray-400 font-bold text-sm pb-1 hover:text-primary transition"); ['All','Squad','Duo','Solo'].forEach(m=>document.getElementById('btn-mode-'+m).className=m===filterMode?"px-4 py-1.5 rounded-full text-xs font-bold bg-primary text-white shadow-md btn-press transition":"px-4 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-slate-700 text-gray-500 shadow-sm btn-press transition"); }
 
+        // --- MATCHES (COUNT FIX) ---
+        function getRealCount(t) {
+            const baseCount = t.participants ? Object.keys(t.participants).length : 0;
+            const mode = (t.gameMode || "SOLO").toUpperCase();
+            if(mode.includes("SQUAD")) return baseCount * 4;
+            if(mode.includes("DUO")) return baseCount * 2;
+            return baseCount;
+        }
+
         function loadMatches(){ db.ref('tournaments').on('value', s=>{ const d=s.val(); const l=document.getElementById('tournament-list'); l.innerHTML=''; if(d)Object.keys(d).reverse().forEach(k=>{ const t=d[k];
-            let typeM=(filterType==='All')||(t.gameMode.includes(filterType));
-            let modeM=(filterMode==='All')||(t.gameMode.includes(filterMode.toUpperCase()));
-            if(!typeM||!modeM)return;
+            let typeM=(filterType==='All')||(t.gameMode.includes(filterType)); let modeM=(filterMode==='All')||(t.gameMode.includes(filterMode.toUpperCase())); if(!typeM||!modeM)return;
             const joined=t.participants&&t.participants[user.uid]; 
-            const count=t.participants?Object.keys(t.participants).length:0;
+            const count=getRealCount(t); // Match Count
             const percent=Math.min(100,(count/t.maxSlots)*100);
             
-            let btn='';
-            if(joined) btn=`<button onclick="showRoom('${k}')" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-md btn-press transition">View Room Details</button>`;
-            else if(!t.isJoinable) btn=`<button disabled class="w-full bg-gray-400 text-white py-3 rounded-xl font-bold cursor-not-allowed">Match Closed</button>`;
-            else if(count>=t.maxSlots) btn=`<button disabled class="w-full bg-red-400 text-white py-3 rounded-xl font-bold cursor-not-allowed">Match Full</button>`;
-            else btn=`<button onclick="openJoinModal('${k}',${t.fee}, '${t.gameMode}')" class="w-full bg-primary hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-lg btn-press transition">Join Match</button>`;
-
-            l.innerHTML+=`
-            <div class="bg-white dark:bg-cardDark p-4 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 relative overflow-hidden animate-card group hover:scale-[1.02] transition-transform">
-                <div class="flex justify-between items-start mb-3">
-                    <div>
-                        <span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-[10px] font-bold rounded-lg uppercase tracking-wide">${t.gameMode}</span>
-                        <h3 class="font-black text-xl text-gray-800 dark:text-white mt-2 leading-tight">${t.title}</h3>
-                        <p class="text-xs text-gray-500 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>${new Date(t.date).toLocaleString()}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[10px] text-gray-400 uppercase font-bold">Entry</p>
-                        <p class="text-2xl font-black text-indigo-600 dark:text-indigo-400">₹${t.fee}</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-3 gap-2 mb-4">
-                    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 p-2 rounded-xl text-center"><p class="text-[10px] text-yellow-600 font-bold uppercase">1st Prize</p><p class="font-bold text-gray-800 dark:text-white">₹${t.p1}</p></div>
-                    <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 p-2 rounded-xl text-center"><p class="text-[10px] text-gray-500 font-bold uppercase">2nd</p><p class="font-bold text-gray-800 dark:text-white">₹${t.p2}</p></div>
-                    <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 p-2 rounded-xl text-center"><p class="text-[10px] text-orange-600 font-bold uppercase">3rd</p><p class="font-bold text-gray-800 dark:text-white">₹${t.p3}</p></div>
-                </div>
-                <div class="mb-4">
-                    <div class="flex justify-between text-xs mb-1"><span class="font-bold text-gray-400">Joined: ${count}/${t.maxSlots}</span><span class="font-bold text-green-500">${Math.round(percent)}% Full</span></div>
-                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all duration-1000" style="width:${percent}%"></div></div>
-                </div>
-                ${btn}
-            </div>`}); }); }
+            let btn=''; if(joined) btn=`<button onclick="showRoom('${k}')" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-md btn-press transition">View Room Details</button>`; else if(!t.isJoinable) btn=`<button disabled class="w-full bg-gray-400 text-white py-3 rounded-xl font-bold cursor-not-allowed">Match Closed</button>`; else if(count>=t.maxSlots) btn=`<button disabled class="w-full bg-red-400 text-white py-3 rounded-xl font-bold cursor-not-allowed">Match Full</button>`; else btn=`<button onclick="openJoinModal('${k}',${t.fee}, '${t.gameMode}')" class="w-full bg-primary hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-lg btn-press transition">Join Match</button>`;
+            l.innerHTML+=`<div class="bg-white dark:bg-cardDark p-4 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 relative overflow-hidden animate-card group hover:scale-[1.02] transition-transform"><div class="flex justify-between items-start mb-3"><div><span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-[10px] font-bold rounded-lg uppercase tracking-wide">${t.gameMode}</span><h3 class="font-black text-xl text-gray-800 dark:text-white mt-2 leading-tight">${t.title}</h3><p class="text-xs text-gray-500 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>${new Date(t.date).toLocaleString()}</p></div><div class="text-right"><p class="text-[10px] text-gray-400 uppercase font-bold">Entry</p><p class="text-2xl font-black text-indigo-600 dark:text-indigo-400">₹${t.fee}</p></div></div><div class="grid grid-cols-3 gap-2 mb-4"><div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 p-2 rounded-xl text-center"><p class="text-[10px] text-yellow-600 font-bold uppercase">1st Prize</p><p class="font-bold text-gray-800 dark:text-white">₹${t.p1}</p></div><div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 p-2 rounded-xl text-center"><p class="text-[10px] text-gray-500 font-bold uppercase">2nd</p><p class="font-bold text-gray-800 dark:text-white">₹${t.p2}</p></div><div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 p-2 rounded-xl text-center"><p class="text-[10px] text-orange-600 font-bold uppercase">3rd</p><p class="font-bold text-gray-800 dark:text-white">₹${t.p3}</p></div></div><div class="mb-4"><div class="flex justify-between text-xs mb-1"><span class="font-bold text-gray-400">Joined: ${count}/${t.maxSlots}</span><span class="font-bold text-green-500">${Math.round(percent)}% Full</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all duration-1000" style="width:${percent}%"></div></div></div>${btn}</div>`;
+        }); }); }
         
+        // --- GIVEAWAYS (COUNT FIX & VIEW ROOM) ---
         function loadGiveaways(){
             db.ref('giveaways').on('value', s=>{ const d=s.val(); const l=document.getElementById('giveaway-list'); l.innerHTML=''; 
             if(d)Object.keys(d).reverse().forEach(k=>{ 
@@ -401,36 +315,13 @@
                 if(!typeM || !modeM) return;
                 
                 const joined=g.participants&&g.participants[user.uid];
-                const count=g.participants?Object.keys(g.participants).length:0;
+                const count=getRealCount(g); // Giveaway Count
                 const percent=Math.min(100,(count/g.maxSlots)*100);
 
-                let btn=joined?`<button disabled class="w-full bg-green-100 text-green-700 font-bold py-3 rounded-xl border border-green-200">✅ Already Joined</button>`:(!g.isJoinable?`<button disabled class="w-full bg-gray-400 text-white font-bold py-3 rounded-xl">Closed</button>`:`<button onclick="openGiveawayJoinModal('${k}', '${g.gameMode || 'SOLO'}')" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg btn-press">Join For Free</button>`);
+                let btn=joined?`<button onclick="showRoomGiveaway('${k}')" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-md btn-press transition">View Room Details</button>`:(!g.isJoinable?`<button disabled class="w-full bg-gray-400 text-white font-bold py-3 rounded-xl">Closed</button>`:`<button onclick="openGiveawayJoinModal('${k}', '${g.gameMode || 'SOLO'}')" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg btn-press">Join For Free</button>`);
                 
-                let prizeHtml = '';
-                if(g.gameMode && g.gameMode.toUpperCase().includes('SOLO')) {
-                    prizeHtml = `<div class="grid grid-cols-3 gap-2 text-center text-xs mb-5"><div class="bg-purple-50 dark:bg-slate-800 p-2 rounded-xl">🥇 <br><b>${g.p1}</b></div><div class="bg-purple-50 dark:bg-slate-800 p-2 rounded-xl">🥈 <br><b>${g.p2}</b></div><div class="bg-purple-50 dark:bg-slate-800 p-2 rounded-xl">🥉 <br><b>${g.p3}</b></div></div>`;
-                } else {
-                    prizeHtml = `<div class="mb-5 text-center"><div class="bg-gradient-to-r from-yellow-400 to-orange-500 p-3 rounded-xl shadow-lg text-white"><p class="text-[10px] font-bold uppercase tracking-widest mb-1 opacity-80">WINNER TAKES ALL</p><p class="text-3xl font-black">💎 ${g.p1}</p></div></div>`;
-                }
-
-                l.innerHTML+=`
-                <div class="bg-white dark:bg-cardDark p-5 rounded-[24px] shadow-lg border border-purple-100 dark:border-purple-900 animate-slide-up mb-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <div>
-                            <span class="text-[10px] bg-purple-100 text-purple-700 px-2 py-1 rounded-md font-bold mb-1 inline-block">${g.gameMode || 'Giveaway'}</span>
-                            <h3 class="text-xl font-black text-purple-600 leading-tight">${g.title}</h3>
-                        </div>
-                        <span class="text-[10px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-bold">FREE</span>
-                    </div>
-                    <p class="text-xs text-gray-500 font-medium mb-3">Draw: ${new Date(g.date).toLocaleString()}</p>
-                    
-                    <div class="mb-4">
-                        <div class="flex justify-between text-xs mb-1.5"><span class="font-bold text-gray-400">Joined: ${count}/${g.maxSlots}</span><span class="font-bold text-purple-600">${Math.round(percent)}%</span></div>
-                        <div class="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full" style="width:${percent}%"></div></div>
-                    </div>
-
-                    ${prizeHtml}${btn}
-                </div>`;
+                let prizeHtml = (g.gameMode && g.gameMode.toUpperCase().includes('SOLO')) ? `<div class="grid grid-cols-3 gap-2 text-center text-xs mb-5"><div class="bg-purple-50 dark:bg-slate-800 p-2 rounded-xl">🥇 <br><b>${g.p1}</b></div><div class="bg-purple-50 dark:bg-slate-800 p-2 rounded-xl">🥈 <br><b>${g.p2}</b></div><div class="bg-purple-50 dark:bg-slate-800 p-2 rounded-xl">🥉 <br><b>${g.p3}</b></div></div>` : `<div class="mb-5 text-center"><div class="bg-gradient-to-r from-yellow-400 to-orange-500 p-3 rounded-xl shadow-lg text-white"><p class="text-[10px] font-bold uppercase tracking-widest mb-1 opacity-80">WINNER TAKES ALL</p><p class="text-3xl font-black">💎 ${g.p1}</p></div></div>`;
+                l.innerHTML+=`<div class="bg-white dark:bg-cardDark p-5 rounded-[24px] shadow-lg border border-purple-100 dark:border-purple-900 animate-slide-up mb-4"><div class="flex justify-between items-center mb-3"><div><span class="text-[10px] bg-purple-100 text-purple-700 px-2 py-1 rounded-md font-bold mb-1 inline-block">${g.gameMode || 'Giveaway'}</span><h3 class="text-xl font-black text-purple-600 leading-tight">${g.title}</h3></div><span class="text-[10px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-bold">FREE</span></div><p class="text-xs text-gray-500 font-medium mb-3">Draw: ${new Date(g.date).toLocaleString()}</p><div class="mb-4"><div class="flex justify-between text-xs mb-1.5"><span class="font-bold text-gray-400">Joined: ${count}/${g.maxSlots}</span><span class="font-bold text-purple-600">${Math.round(percent)}%</span></div><div class="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-2 overflow-hidden"><div class="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full" style="width:${percent}%"></div></div></div>${prizeHtml}${btn}</div>`;
             }); });
         }
 
@@ -439,40 +330,19 @@
             const username = document.getElementById('tf-username').value.trim();
             const amount = Number(document.getElementById('tf-amount').value);
             const note = document.getElementById('tf-note').value;
-
             if(!username || !amount) return alert("Fill Username & Amount");
             if(amount > user.balance) return alert("Insufficient Balance");
-            if(username === user.name) return alert("Cannot send to self"); // Check against own name
-
-            const btn = event.target; 
-            btn.disabled = true; btn.innerText = "Sending...";
-
-            // Find Receiver UID by Name (Username)
+            if(username === user.name) return alert("Cannot send to self");
+            const btn = event.target; btn.disabled = true; btn.innerText = "Sending...";
             db.ref('users').orderByChild('name').equalTo(username).once('value', snapshot => {
                 if (snapshot.exists()) {
-                    // Assuming name is unique, get the first match
                     const receiverId = Object.keys(snapshot.val())[0];
                     const receiverData = snapshot.val()[receiverId];
-
                     const updates = {};
-                    const newSenderBal = user.balance - amount;
-                    const newReceiverBal = (receiverData.balance || 0) + amount;
-
-                    updates[`users/${user.uid}/balance`] = newSenderBal;
-                    updates[`users/${receiverId}/balance`] = newReceiverBal;
-
-                    db.ref().update(updates).then(() => {
-                        alert(`Successfully sent ₹${amount} to ${receiverData.name}`);
-                        closeModal('transfer-modal');
-                        btn.disabled = false; btn.innerText = "Transfer Now";
-                    }).catch(error => {
-                        alert("Transfer Failed: " + error.message);
-                        btn.disabled = false; btn.innerText = "Transfer Now";
-                    });
-                } else {
-                    alert("User not found! Check username carefully.");
-                    btn.disabled = false; btn.innerText = "Transfer Now";
-                }
+                    updates[`users/${user.uid}/balance`] = user.balance - amount;
+                    updates[`users/${receiverId}/balance`] = (receiverData.balance || 0) + amount;
+                    db.ref().update(updates).then(() => { alert(`Successfully sent ₹${amount} to ${receiverData.name}`); closeModal('transfer-modal'); btn.disabled = false; btn.innerText = "Transfer Now"; });
+                } else { alert("User not found!"); btn.disabled = false; btn.innerText = "Transfer Now"; }
             });
         }
 
@@ -498,10 +368,10 @@
             let displayString = `${p1Name} (L)`;
             if(selectedMatchMode.includes('DUO')) displayString += " +1";
             if(selectedMatchMode.includes('SQUAD')) displayString += " +3";
-            db.ref(`tournaments/${selectedMatchId}`).once('value', s => { const t = s.val(); if(t.participants && Object.keys(t.participants).length >= t.maxSlots) return alert("Full!"); db.ref().update({[`users/${user.uid}/balance`]: user.balance - t.fee,[`tournaments/${selectedMatchId}/participants/${user.uid}`]: { ffName: displayString, ffUid: p1Uid, mobile: p1Mobile }}).then(() => { closeModal('join-modal'); alert("Joined Successfully!"); }); });
+            db.ref(`tournaments/${selectedMatchId}`).once('value', s => { const t = s.val(); if(getRealCount(t) >= t.maxSlots) return alert("Full!"); db.ref().update({[`users/${user.uid}/balance`]: user.balance - t.fee,[`tournaments/${selectedMatchId}/participants/${user.uid}`]: { ffName: displayString, ffUid: p1Uid, mobile: p1Mobile }}).then(() => { closeModal('join-modal'); alert("Joined Successfully!"); }); });
         }
 
-        // Giveaway Join (NEW DYNAMIC)
+        // Giveaway Join
         function openGiveawayJoinModal(id, mode) {
             selectedGiveawayId = id; selectedGiveawayMode = mode.toUpperCase();
             document.getElementById('giveaway-match-mode').innerText = selectedGiveawayMode;
@@ -525,6 +395,8 @@
         function submitHackerReport(){const u=document.getElementById('h-uid').value,f=document.getElementById('h-video').files[0];if(!u||!f)return alert("Fill all");const b=document.getElementById('btn-report');b.disabled=true;b.innerText="Uploading...";const r=storage.ref(`reports/${Date.now()}_${u}`);const t=r.put(f);t.on('state_changed',s=>{b.innerText="Uploading "+Math.floor((s.bytesTransferred/s.totalBytes)*100)+"%"},e=>{alert("Error");b.disabled=false;b.innerText="Submit"},()=>{t.snapshot.ref.getDownloadURL().then(v=>{db.ref('hacker_reports').push({hackerUid:document.getElementById('h-uid').value,video:v}).then(()=>{closeModal('hacker-modal');alert("Reported");});});});}
         function openModal(id){document.getElementById(id).classList.remove('hidden');} function closeModal(id){document.getElementById(id).classList.add('hidden');} function logout(){localStorage.removeItem('arena_uid'); location.reload();} function loadHistory(){document.getElementById('payment-history').innerHTML="Loading...";} function toggleTheme(){if(document.documentElement.classList.contains('dark')){document.documentElement.classList.remove('dark');localStorage.setItem('theme','light');}else{document.documentElement.classList.add('dark');localStorage.setItem('theme','dark');}} function toggleNotifications(){alert("Toggled");}
         function showRoom(k){db.ref(`tournaments/${k}`).once('value',s=>{const t=s.val();document.getElementById('d-room-id').innerText=t.roomId||"Wait";document.getElementById('d-room-pass').innerText=t.roomPass||"Wait";openModal('room-modal');});}
+        // NEW: Show Giveaway Room
+        function showRoomGiveaway(k){db.ref(`giveaways/${k}`).once('value',s=>{const t=s.val();document.getElementById('d-room-id').innerText=t.roomId||"Wait";document.getElementById('d-room-pass').innerText=t.roomPass||"Wait";openModal('room-modal');});}
 
         switchHomeTab('matches');
         initApp();
